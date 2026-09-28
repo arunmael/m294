@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let userInput = prompt("Enter a number:");
+            let numbers = [];
+            while (userInput !== "") {
+                let userNumber = Number(userInput);
+                if (!isNaN(userNumber)) {
+                    numbers.push(userNumber);
+                } else {
+                    alert("Please enter a valid number.");
+                }
+                userInput = prompt("Enter a number:");
+            }
+            let userOperator = prompt("Enter an operator (+, -, *, /):");
+            let result = numbers[0];
+            let numbersCalc = numbers.slice(1);
+            if (userOperator === "+" || userOperator === "-" || userOperator === "*" || userOperator === "/") {
+                if (userOperator === "+") {
+                    numbersCalc.forEach(function(num) {
+                        result += num;
+                    });
+                } else if (userOperator === "-") {
+                    numbersCalc.forEach(function(num) {
+                        result -= num;
+                    });
+                } else if (userOperator === "*") {
+                    numbersCalc.forEach(function(num) {
+                        result *= num;
+                    });
+                } else if (userOperator === "/") {
+                    numbersCalc.forEach(function(num) {
+                        result /= num;
+                    });
+                }
+                alert("The result is: " + result);
+            } else {
+                alert("Invalid operator. Please refresh the page and try again.");
+            }
+        });
+        
+        </script>
+
+        </head>
+        <main>
+            <h1>Add all the numbers</h1>
+        </main>
+</html>

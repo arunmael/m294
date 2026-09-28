@@ -56,13 +56,14 @@ footer {
     background-color: rgb(183, 250, 207);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    padding: 10px;
+    padding: 8px;
     margin-bottom: 0;
 }
 
 
 footer p {
     background-color: rgb(183, 250, 207);
+    margin-left: 40px;
 }
 
 h1 {

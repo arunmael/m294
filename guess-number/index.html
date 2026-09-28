@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {   
+            let randomNumber = Math.floor(Math.random() * 100) + 1;
+            let userGuess = prompt("Guess a number between 1 and 100:");
+            if (userGuess == randomNumber) {
+                alert("Congratulations! You guessed the correct number: " + randomNumber);
+            } else if (userGuess < randomNumber) {
+                alert("Too low!");
+            } else {
+                alert("Too high!");
+            }
+        });
+        </script>
+</html>

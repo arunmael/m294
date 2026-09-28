@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const date = new Date();
+            time = date.getHours();
+            let name = prompt("What is your name?");
+            if (time < 11 && time >= 5) {
+                alert("Good morning " + name);
+            } else if (time < 17 && time >= 11) {
+                alert("Good afternoon " + name);
+            } else if (time < 21 && time >= 17) {
+                alert("Good evening " + name);
+            } else {
+                alert("Good night " + name);
+            }
+        });
+        
+        </script>
+</head>
+<main>
+    <h1>Hallo</h1>
+</main>
+</html>
