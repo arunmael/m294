@@ -89,3 +89,15 @@ h2 {
     display: inline-block; 
     padding: 5;
 }
+
+
+#player {
+    border-radius: 30px; 
+    border: 3px solid white;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.players {
+    background-color: rgb(183, 250, 207);
+}
