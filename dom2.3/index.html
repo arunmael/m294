@@ -3,6 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Platzhalter</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.style.backgroundColor = "lightblue";
+            document.querySelector("h1").innerText = "Arun";
+            document.querySelector("p").classList.add("large");
+            const ul = document.querySelector("ul");
+            const newLi = document.createElement("li");
+            newLi.textContent = "Drittes Element";
+            ul.appendChild(newLi);
+            ul.removeChild(ul.children[1]);
+            img = document.createElement("img");
+            img.src = "C:\\Bzz\\m294\\m294\\spoofify\\albumcovers\\loungemusic.jpeg";
+            img.alt = "Loungemusic Album Cover";
+            img.style.width = "200px";
+            img.style.height = "200px";
+            document.querySelector("h1").appendChild(img);
+        });
+    </script>
+
     
 </head>
 <main>
