@@ -1,3 +1,5 @@
+
+
 albumCovers = [
     {id: 1, src: "albumcovers/loungemusic.jpeg", alt: "Lounge Music Album Cover", isDisplayed: true,
         tracklist: ["Boss Green","Goldrichtig","RondoNumbaNine","giorgio armani flow","Augenblick","Maradona","Promi Party","Lounge City","Light Blue","Gucci Tom Ford","Berlin calling","Kalter Krieg","90 Minuten"]},
@@ -128,21 +130,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#removeAlbum").onclick = () => {
         const albums = document.querySelectorAll("#latest-realeses-grid img");
         if (albums.length === 0) {
-            alert("Threre are no more albums to remove")
-        }
-        else {
-            for (let i = 0; i < 3; i++){
+            alert("Threre are no more albums to remove");
+        } else {
+            for (let i = 0; i < 3; i++) {
                 const firstAlbum = document.querySelectorAll("#latest-realeses-grid img")[0];
-                firstAlbum.remove()
-                albumCovers[i].isDisplayed = false;
+                if (firstAlbum) {
+                    firstAlbum.remove();
+                }
+                if (albumCovers[i]) {
+                    albumCovers[i].isDisplayed = false;
+                }
             }
-
-        }}
-        
-
-    
-
-
+        }
+    };
 
     document.querySelector("#randomize").onclick = () => {
         let realesList = document.querySelector("#latest-realeses-grid");
@@ -152,74 +152,70 @@ document.addEventListener("DOMContentLoaded", () => {
             if (i < coverCount) {
                 albumCovers[i].isDisplayed = false;
                 const firstAlbum = document.querySelectorAll("#latest-realeses-grid img")[0];
-                firstAlbum.remove()
+                if (firstAlbum) {
+                    firstAlbum.remove();
+                }
             } else {
                 albumCovers[i].isDisplayed = false;
             }
-            
-        };
+        }
 
         for (let i = 0; i < coverCount; i++) {
             if (i >= albumCovers.length) {
-                break
-            } else {
-                let randomElement = albumCovers[Math.floor(Math.random() * 41)];
+                break;
+            }
+
+            let randomElement = albumCovers[Math.floor(Math.random() * 41)];
 
             while (randomElement.isDisplayed === true) {
                 randomElement = albumCovers[Math.floor(Math.random() * 41)];
             }
 
-
             let img = "";
-
-            div = document.querySelector("#latest-realeses-grid")
+            let div = document.querySelector("#latest-realeses-grid");
             let src = randomElement.src;
             let alt = randomElement.alt;
             img = document.createElement("img");
-            img.setAttribute("src", src)
-            img.setAttribute("alt", alt)
-            img.setAttribute("width", 200)
-            img.setAttribute("height", 200)
-            img.setAttribute("data-id", randomElement.id)
-            div.appendChild(img)
+            img.setAttribute("src", src);
+            img.setAttribute("alt", alt);
+            img.setAttribute("width", 200);
+            img.setAttribute("height", 200);
+            img.setAttribute("data-id", randomElement.id);
+            div.appendChild(img);
             randomElement.isDisplayed = true;
         }
+    };
 
-
-    }
-            }
-    
-            
     document.querySelector("#latest-realeses-grid").addEventListener("click", (event) => {
+        const ol = document.querySelector("#tracks");
 
-        const olLength = document.querySelector("#tracks").length;
-        ol =   document.querySelector("#tracks")
-      
         while (ol.firstChild) {
             ol.removeChild(ol.firstChild);
         }
 
-
-        if (event.target.tagName === "IMG"){
+        if (event.target.tagName === "IMG") {
             let albumId = event.target.getAttribute("data-id");
-            albumId = parseInt(albumId, 10)
+            albumId = parseInt(albumId, 10);
             let tracks = [];
-            albumCovers.forEach(element => {
+            albumCovers.forEach((element) => {
                 if (element.id === albumId) {
                     tracks = element.tracklist;
                 }
+            });
+
+            for (let i = 0; i < tracks.length; i++) {
+                const li = document.createElement("li");
+                li.textContent = tracks[i];
+                ol.appendChild(li);
+            }
         }
-    );
-            for (i = 0; i < tracks.length; i++) {
-                    ol = document.querySelector("#tracks");
-                    const li = document.createElement("li");
-                    li.textContent = tracks[i];
-                    ol.appendChild(li);
-                }
+    });
+
+    document.querySelector("#tracks").addEventListener("click", (event) => {
+        if (event.target.tagName === "LI") {
+            const trackName = event.target.textContent;
+            const hThree = document.querySelector("#track-player");
+            hThree.textContent = trackName;
         }
-
-
-    })
-
-    
+    });
 });
