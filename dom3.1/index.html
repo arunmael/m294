@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Platzhalter</title>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelector("#buttonOne").onclick = () => {
+                    alert("Hello World!");
+                    value = document.querySelector("#countOne").innerText;
+                    value_final = parseInt(value) + 1;
+                    document.querySelector("#countOne").innerText = value_final;
+                }
+                document.querySelector("#buttonTwo").onclick = () => {
+                    alert("Hello World!");
+                    value = document.querySelector("#countTwo").innerText;
+                    value_final = parseInt(value) + 1;
+                    document.querySelector("#countTwo").innerText = value_final;
+                }
+                document.querySelector("div").onclick = () => {
+                    const ball = document.querySelector("img");
+                    const div = event.currentTarget;
+                    const rect = div.getBoundingClientRect();
+
+                    const x = event.clientX - rect.left;
+                    const y = event.clientY - rect.top;
+
+                    ball.style.position = "absolute";
+                    ball.style.left = x - ball.width / 2 + "px";
+                    ball.style.top = y - ball.height / 2 + "px";
+                }
+            });
+        </script>
+        <style>
+            div {
+                background-color: green;
+                padding: 20px;
+                position: relative;
+            }
+
+            img {
+                position: absolute;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div>
+        <h1 id="countOne">0</h1>
+        <h1 id="countTwo">0</h1>
+        <button id="buttonOne">Count One</button>
+        <button id="buttonTwo">Count Two</button>
+        <img src="soccer-ball-svgrepo-com.svg" alt="Fussball" width="200" height="200">
+        </div>
+    </body>
+</html>
