@@ -1,0 +1,18 @@
+* {
+    background-color: #ffc0cb;
+    display: block;
+    margin-bottom: 10px;
+}
+
+input {
+    background-color: white;
+}
+
+h1, label, h2 {
+    color: #da4f57;
+}
+
+button {
+    display: flex;
+    
+}
