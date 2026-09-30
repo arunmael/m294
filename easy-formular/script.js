@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 let date = new Date();
                 let time = date.getHours();
                 event.preventDefault();
-                 const nameInput = document.querySelector("#name-input");
+                const nameInput = document.querySelector("#name-input");
                 const name = nameInput.value;
                 const p = document.querySelector("p");
                 if (time < 11 && time >= 5) {
