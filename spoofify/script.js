@@ -205,6 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             for (let i = 0; i < tracks.length; i++) {
                 const li = document.createElement("li");
+                li.classList.add("track");
                 li.textContent = tracks[i];
                 ol.appendChild(li);
             }

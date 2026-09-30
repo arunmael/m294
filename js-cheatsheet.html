@@ -1,0 +1,3156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JavaScript Cheatsheet M294</title>
+<style>
+:root{
+  --bg:#fbfaf6; --panel:#ffffff; --ink:#1d2026; --muted:#5d6470; --line:#e4e1d6;
+  --accent:#b45309; --accent-soft:#fdf0dc; --code-bg:#f5f3ea; --code-ink:#26292f;
+  --mark:#ffe58a; --ok:#137a3d; --warn:#b42318; --warn-bg:#fdecea; --tip-bg:#eaf4ee;
+  --k:#8250df; --s:#0a7d3b; --c:#7b8290; --n:#b35a00; --t:#0b6fb8; --f:#b0247a;
+  --shadow:0 1px 2px rgba(0,0,0,.06);
+}
+:root[data-theme="dark"]{
+  --bg:#15171b; --panel:#1d2026; --ink:#e6e7ea; --muted:#9aa1ad; --line:#2f333b;
+  --accent:#f0a24a; --accent-soft:#33291a; --code-bg:#14161a; --code-ink:#e6e7ea;
+  --mark:#7a5f00; --ok:#5fd28a; --warn:#ff8f85; --warn-bg:#3a1f1d; --tip-bg:#1b2b22;
+  --k:#c3a1ff; --s:#7ddc9c; --c:#7f8794; --n:#ffb066; --t:#6cb8f5; --f:#f28cc4;
+  --shadow:none;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171b; --panel:#1d2026; --ink:#e6e7ea; --muted:#9aa1ad; --line:#2f333b;
+    --accent:#f0a24a; --accent-soft:#33291a; --code-bg:#14161a; --code-ink:#e6e7ea;
+    --mark:#7a5f00; --ok:#5fd28a; --warn:#ff8f85; --warn-bg:#3a1f1d; --tip-bg:#1b2b22;
+    --k:#c3a1ff; --s:#7ddc9c; --c:#7f8794; --n:#ffb066; --t:#6cb8f5; --f:#f28cc4;
+    --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+code,pre,kbd{font-family:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace}
+
+/* ---------- Kopfleiste ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;
+  padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top h1{margin:0;font-size:16px;white-space:nowrap}
+.top h1 span{color:var(--accent)}
+.search{flex:1;position:relative;max-width:640px}
+.search input{width:100%;padding:9px 12px 9px 34px;font:inherit;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);border-radius:10px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.count{font-size:13px;color:var(--muted);white-space:nowrap}
+.btn{font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:6px 10px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+#menuBtn{display:none}
+
+/* ---------- Layout ---------- */
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;max-width:1500px;margin:0 auto}
+nav#toc{position:sticky;top:57px;align-self:start;height:calc(100vh - 57px);overflow:auto;
+  padding:16px 8px 32px 16px;font-size:14px}
+nav#toc a{display:flex;justify-content:space-between;gap:8px;padding:5px 10px;border-radius:8px;
+  color:var(--ink);text-decoration:none}
+nav#toc a:hover{background:var(--accent-soft)}
+nav#toc a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav#toc a.empty{opacity:.35}
+nav#toc small{color:var(--muted)}
+main{padding:20px 20px 80px;min-width:0}
+section{margin-bottom:34px}
+section>h2{font-size:21px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+section>h2::before{content:"";width:6px;height:22px;background:var(--accent);border-radius:3px}
+section>.intro{margin:0 0 14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr));gap:14px;align-items:start}
+.e{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+  box-shadow:var(--shadow);min-width:0}
+.e.wide{grid-column:1/-1}
+.e h4{margin:0 0 4px;font-size:15px}
+.e h4 code{font-size:14px}
+.e p{margin:4px 0 8px}
+.e ul,.e ol{margin:4px 0 8px;padding-left:20px}
+.e li{margin:2px 0}
+.w{color:var(--muted)}
+.w b{color:var(--accent)}
+.note,.warn,.tip{border-radius:8px;padding:6px 10px;margin:8px 0;font-size:14px}
+.note{background:var(--accent-soft)}
+.warn{background:var(--warn-bg)}
+.warn::before{content:"Achtung: ";font-weight:700;color:var(--warn)}
+.tip{background:var(--tip-bg)}
+.tip::before{content:"Tipp: ";font-weight:700;color:var(--ok)}
+pre{position:relative;margin:6px 0;padding:10px 12px;background:var(--code-bg);color:var(--code-ink);
+  border:1px solid var(--line);border-radius:8px;overflow:auto;font-size:13px;line-height:1.5;tab-size:2}
+pre code{font-size:inherit;white-space:pre}
+:not(pre)>code{background:var(--code-bg);border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:.9em}
+pre .copy{position:absolute;top:5px;right:5px;opacity:0;font-size:11px;padding:2px 7px}
+pre:hover .copy,pre .copy:focus{opacity:1}
+.tk{color:var(--k)} .ts{color:var(--s)} .tc{color:var(--c);font-style:italic}
+.tn{color:var(--n)} .tt{color:var(--t)} .tf{color:var(--f)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0}
+th,td{text-align:left;vertical-align:top;padding:5px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+td:first-child{white-space:nowrap}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+kbd{background:var(--code-bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:12px}
+.none{display:none;text-align:center;color:var(--muted);padding:60px 0}
+.none.show{display:block}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:22px}
+.hero div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.hero b{display:block;color:var(--accent)}
+.hero span{font-size:13px;color:var(--muted)}
+.hidden{display:none!important}
+
+@media (max-width:860px){
+  .wrap{grid-template-columns:1fr}
+  #menuBtn{display:inline-block}
+  nav#toc{position:fixed;inset:57px 0 0 0;height:auto;z-index:15;background:var(--bg);display:none;padding:14px 16px}
+  nav#toc.open{display:block}
+  .count{display:none}
+  .top h1 span{display:none}
+  main{padding:14px 16px 60px}
+  .grid{grid-template-columns:1fr}
+}
+@media print{
+  .top,nav#toc,.copy,.hero{display:none!important}
+  body{background:#fff;color:#000;font-size:10pt}
+  .wrap{display:block}
+  main{padding:0;columns:2;column-gap:14px}
+  section{margin-bottom:10px}
+  .grid{display:block}
+  .e{break-inside:avoid;margin-bottom:6px;border-color:#bbb;box-shadow:none;padding:6px 8px}
+  section>h2{break-after:avoid}
+  pre{font-size:8.5pt;padding:4px 6px;white-space:pre-wrap;overflow:visible}
+  html{scroll-padding-top:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Inhaltsverzeichnis">Menü</button>
+  <h1>JS Cheatsheet <span>· Modul 294</span></h1>
+  <label class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Suchen: z.B. querySelector, schleife, klick, array, Datum …  ( / )" autocomplete="off" spellcheck="false">
+  </label>
+  <span class="count" id="count"></span>
+  <button class="btn" id="themeBtn" title="Hell/Dunkel">Hell/Dunkel</button>
+</header>
+
+<div class="wrap">
+<nav id="toc" aria-label="Inhalt"></nav>
+<main id="main">
+
+<div class="hero">
+  <div><b>Suche</b><span>Tippe oben – mehrere Wörter = alle müssen vorkommen. <kbd>/</kbd> fokussiert, <kbd>Esc</kbd> leert.</span></div>
+  <div><b>Offline</b><span>Eine Datei, kein Internet nötig. Code-Blöcke: Maus drüber → «Copy».</span></div>
+  <div><b>Drucken</b><span>Strg+P → 2-spaltiges Layout ohne Menü.</span></div>
+</div>
+
+<section id="start" data-title="Schnellstart">
+<h2>Schnellstart</h2>
+<p class="intro">Das Grundgerüst und die wichtigsten Befehle auf einen Blick.</p>
+<div class="grid">
+
+<article class="e wide" data-k="grundgerüst template vorlage skeleton boilerplate anfang starten domcontentloaded">
+<h4>Standard-Grundgerüst (Vorlage für jede Aufgabe)</h4>
+<p class="w"><b>Wann:</b> Immer als Startpunkt. Das Script steht im <code>&lt;head&gt;</code>, wird also ausgeführt, <em>bevor</em> die Elemente im <code>&lt;body&gt;</code> existieren – darum wartet man auf <code>DOMContentLoaded</code>.</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang="de"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Titel&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+  &lt;script src="script.js"&gt;&lt;/script&gt;      &lt;!-- externes Script (im head → DOMContentLoaded nötig) --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1 id="titel"&gt;Hallo&lt;/h1&gt;
+  &lt;button id="btn"&gt;Klick mich&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<pre><code class="js">// script.js
+document.addEventListener("DOMContentLoaded", () =&gt; {
+  // Ab hier existiert das ganze HTML → Elemente dürfen gesucht werden
+  const btn = document.querySelector("#btn");
+  btn.addEventListener("click", () =&gt; {
+    document.querySelector("#titel").textContent = "Geklickt!";
+  });
+});</code></pre>
+<div class="tip">Alternativen zu DOMContentLoaded: <code>&lt;script src="script.js" defer&gt;&lt;/script&gt;</code> im head, oder das <code>&lt;script&gt;</code> ganz unten vor <code>&lt;/body&gt;</code>.</div>
+</article>
+
+<article class="e" data-k="top 10 wichtigste befehle übersicht zusammenfassung">
+<h4>Die wichtigsten Befehle in 30 Sekunden</h4>
+<table>
+<tr><th>Ich will …</th><th>Befehl</th></tr>
+<tr><td>Element holen</td><td><code>document.querySelector("#id")</code></td></tr>
+<tr><td>Alle Elemente holen</td><td><code>document.querySelectorAll(".cls")</code></td></tr>
+<tr><td>Text ändern</td><td><code>el.textContent = "…"</code></td></tr>
+<tr><td>Klasse an/aus</td><td><code>el.classList.toggle("x")</code></td></tr>
+<tr><td>Style setzen</td><td><code>el.style.color = "red"</code></td></tr>
+<tr><td>Element erzeugen</td><td><code>document.createElement("li")</code></td></tr>
+<tr><td>Einfügen</td><td><code>parent.appendChild(el)</code></td></tr>
+<tr><td>Löschen</td><td><code>el.remove()</code></td></tr>
+<tr><td>Auf Klick reagieren</td><td><code>el.addEventListener("click", fn)</code></td></tr>
+<tr><td>Eingabe lesen</td><td><code>input.value</code></td></tr>
+<tr><td>Text → Zahl</td><td><code>Number("5")</code>, <code>parseInt("5")</code></td></tr>
+<tr><td>Zufallszahl 1–100</td><td><code>Math.floor(Math.random()*100)+1</code></td></tr>
+<tr><td>Debuggen</td><td><code>console.log(x)</code></td></tr>
+</table>
+</article>
+
+<article class="e" data-k="einbinden script tag extern inline defer async async einbindung">
+<h4>JavaScript einbinden</h4>
+<p class="w"><b>Wann:</b> Inline nur für Mini-Tests; sonst externe Datei (sauber, wiederverwendbar, cachebar).</p>
+<pre><code class="html">&lt;!-- 1) Inline im HTML --&gt;
+&lt;script&gt;
+  alert("Hallo");
+&lt;/script&gt;
+
+&lt;!-- 2) Extern (Datei script.js, im selben Ordner) --&gt;
+&lt;script src="script.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3) Extern, lädt parallel, läuft nach dem HTML-Parsen --&gt;
+&lt;script src="script.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- 4) Als ES-Modul (import/export möglich, ist automatisch defer) --&gt;
+&lt;script type="module" src="main.js"&gt;&lt;/script&gt;
+
+&lt;!-- 5) Inline-Handler im HTML-Attribut (veraltet, vermeiden) --&gt;
+&lt;button onclick="alert('Hi')"&gt;Klick&lt;/button&gt;</code></pre>
+<div class="note">Ein <code>&lt;script src="…"&gt;</code> darf <b>keinen</b> Code zwischen den Tags haben – der wird ignoriert. <code>&lt;script&gt;</code> ist <b>nie selbstschliessend</b> (<code>&lt;script … /&gt;</code> ✘) und <code>&lt;link&gt;</code> ist nur für CSS.</div>
+<div class="tip"><b>Inline-JavaScript</b> = JS im HTML-Attribut (<code>onclick="…"</code>). Nur für Mini-Beispiele; bei vielen/mehrzeiligen Anweisungen unübersichtlich → externe Datei. JS wird <b>vom Browser</b> (JS-Engine) ausgeführt, nicht vom Betriebssystem.</div>
+</article>
+
+<article class="e" data-k="ausführungsreihenfolge lädt reihenfolge seite laden null cannot read properties">
+<h4>Warum «Cannot read properties of null»?</h4>
+<p class="w"><b>Wann:</b> Häufigster Anfängerfehler. Das Script läuft, bevor der Browser das Element gebaut hat, oder der Selektor stimmt nicht.</p>
+<pre><code class="js">// Script im &lt;head&gt;, OHNE Warten:
+const btn = document.querySelector("#btn");   // → null (Element existiert noch nicht!)
+btn.addEventListener("click", f);              // TypeError: Cannot read properties of null
+
+// Lösung: warten
+document.addEventListener("DOMContentLoaded", () =&gt; { /* hier ist alles da */ });</code></pre>
+<ul>
+<li>Selektor prüfen: <code>#id</code> (Raute), <code>.klasse</code> (Punkt), <code>tag</code> (nichts).</li>
+<li><code>console.log(btn)</code> – ist es <code>null</code>?</li>
+</ul>
+</article>
+
+</div>
+</section>
+
+<section id="exam" data-title="Probeprüfung &amp; Taktik">
+<h2>Probeprüfung &amp; Prüfungs-Taktik</h2>
+<p class="intro">Alle 12 Fragen der Probeprüfung mit richtiger Antwort und <em>Begründung</em> – die Prüfung fragt dieselben Muster in Varianten ab. Die Quellcode-Vorlagen der Fragen fehlten; die HTML-Struktur unten ist aus den Antworten rekonstruiert.</p>
+<div class="grid">
+
+<article class="e wide" data-k="taktik multiple choice moodle mehrere richtige antworten punkte teilweise falsch strategie tipps prüfung fragen">
+<h4>Taktik bei Multiple-Choice (mehrere Antworten richtig)</h4>
+<ul>
+<li>Die Fragen sind meist <b>«Mehrfachauswahl»</b>: oft sind <b>2–3 Antworten richtig</b>. Jede Antwort einzeln prüfen, nicht bei der ersten richtigen aufhören (in der Probe gab es bei Frage 2, 3, 4, 5, 7 Teilpunkte, weil nur ein Teil erkannt wurde).</li>
+<li><b>Punkte = Anteil der gefundenen richtigen Antworten</b> (2 von 3 → 0.67, 1 von 2 → 0.5, 1 von 3 → 0.33). Ob falsche Auswahl zusätzlich Abzug gibt, ist aus der Probe nicht ersichtlich (Frage 6 = 0 Punkte: nur falsche Antworten gewählt) → im Zweifel nichts raten, aber <b>alle</b> sicheren ankreuzen.</li>
+<li><b>Prüfen, was <em>alle</em> / <em>jedes</em> / <em>erste</em> / <em>letzte</em> heisst</b>: «aus jeder Liste das erste» ≠ «das allererste li der Seite».</li>
+<li><b>Erfundene Methoden erkennen</b> (siehe «Was gibt es NICHT?» im Abschnitt DOM): <code>addChild</code>, <code>addClass</code>, <code>removeAll</code>, <code>getElementByClassName</code> … → sofort falsch.</li>
+<li><b>Klein-/Grossschreibung und Mehrzahl</b> beachten: <code>getElementsBy…</code> (Mehrzahl), <code>getElementById</code> (Einzahl), <code>innerHTML</code>, <code>classList</code>.</li>
+<li><b>Selektor-Syntax</b>: <code>#</code> ID, <code>.</code> Klasse; bei <code>getElementById</code> <b>ohne</b> <code>#</code>, bei <code>querySelector</code> <b>mit</b>.</li>
+<li>Frage mit «Quellcode»: HTML-Struktur zuerst genau anschauen (welche Elemente, welche Klassen/IDs, Nachbarn, Verschachtelung).</li>
+<li>Textfragen (z.B. «Beschreiben Sie …»): in ganzen Sätzen antworten – <b>Definition, Einsatzsituation, Interaktion</b> = 3 Teile bei 2 Punkten. Musterantworten siehe unten und im Abschnitt «Konzepte».</li>
+</ul>
+</article>
+
+<article class="e wide" data-k="html struktur quellcode gemüse frühling sommer beispiel liste rekonstruiert probeprüfung">
+<h4>Vermutete HTML-Struktur der Probeprüfung (Fragen 3–10)</h4>
+<pre><code class="html">&lt;h2 id="fruehling"&gt;Frühling&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li class="gruen"&gt;Bärlauch&lt;/li&gt;
+  &lt;li class="rot"&gt;Radieschen&lt;/li&gt;
+  &lt;li&gt;Rhabarber&lt;/li&gt;               &lt;!-- ohne class-Attribut --&gt;
+&lt;/ul&gt;
+&lt;h2 id="sommer"&gt;Sommer&lt;/h2&gt;           &lt;!-- Überschrift, das ul ist der NÄCHSTE GESCHWISTER, kein Kind! --&gt;
+&lt;ul&gt;
+  &lt;li class="rot"&gt;Tomaten&lt;/li&gt; …
+&lt;/ul&gt;
+&lt;h2 id="herbst"&gt;Herbst&lt;/h2&gt;
+&lt;ul&gt; … &lt;li&gt;Kürbis&lt;/li&gt; … &lt;/ul&gt;
+&lt;h2 id="winter"&gt;Winter&lt;/h2&gt;
+&lt;ul&gt; … &lt;/ul&gt;                      &lt;!-- 4 Listen: Index 0–3, das letzte = Index 3 --&gt;</code></pre>
+</article>
+
+<article class="e" data-k="frage 1 javascript browser inline betriebssystem programmieren html css ausführen attribut onclick">
+<h4>Frage 1 – JavaScript im Browser</h4>
+<p><b>Richtig:</b></p>
+<ul>
+<li>✔ Im Gegensatz zu HTML und CSS kann mit JS <b>programmiert</b> werden (Variablen, Schleifen, Bedingungen, Funktionen). HTML = Auszeichnung/Struktur, CSS = Gestaltung.</li>
+<li>✔ <b>Inline-JavaScript</b> = JS <em>innerhalb eines HTML-Attributs</em>, z.B. <code>&lt;button onclick="alert('Hi')"&gt;</code>.</li>
+<li>✔ JS wird <b>vom Browser</b> ausgeführt (JavaScript-Engine, z.B. V8).</li>
+</ul>
+<p><b>Falsch:</b></p>
+<ul>
+<li>✘ «vom Betriebssystem ausgeführt» – nein, vom Browser (Node.js wäre die Ausnahme ausserhalb des Browsers).</li>
+<li>✘ «viele mehrzeilige Inline-Anweisungen bleiben übersichtlich» – im Gegenteil: unübersichtlich, nicht wiederverwendbar → externe <code>.js</code>-Datei + <code>addEventListener</code>.</li>
+</ul>
+</article>
+
+<article class="e" data-k="frage 2 dom geladen defer domcontentloaded script ende body link rel javascript selbstschliessend ausführen sicherstellen">
+<h4>Frage 2 – Wie ist der DOM beim Ausführen schon geladen?</h4>
+<p><b>3 richtige Varianten:</b></p>
+<pre><code class="html">&lt;!-- 1) BESTE Variante: defer --&gt;
+&lt;script src="script.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- 2) Script ganz am Ende des body --&gt;
+&lt;body&gt; … &lt;script src="script.js"&gt;&lt;/script&gt; &lt;/body&gt;
+
+&lt;!-- 3) Klassisch: im head + auf das Ereignis warten --&gt;
+&lt;script src="script.js"&gt;&lt;/script&gt;
+&lt;script&gt;document.addEventListener("DOMContentLoaded", () =&gt; { /* … */ });&lt;/script&gt;</code></pre>
+<p><b>Falsch:</b></p>
+<ul>
+<li>✘ <code>&lt;link rel="javascript" href="…" defer /&gt;</code> – <code>&lt;link&gt;</code> ist für CSS; JS braucht <code>&lt;script&gt;</code>.</li>
+<li>✘ <code>&lt;script src="…" defer /&gt;</code> – <code>&lt;script&gt;</code> darf <b>nicht selbstschliessend</b> sein, es braucht <code>&lt;/script&gt;</code>.</li>
+</ul>
+<div class="note"><b>defer</b> lädt das Script parallel und führt es aus, sobald das HTML fertig geparst ist (Reihenfolge bleibt erhalten). <code>async</code> führt sofort nach dem Laden aus (Reihenfolge nicht garantiert) – nicht für DOM-Scripts.</div>
+</article>
+
+<article class="e" data-k="frage 3 first-child nth-child erste eintrag jeder liste queryselectorall get index ul li">
+<h4>Frage 3 – Erster Eintrag <em>jeder</em> ungeordneten Liste</h4>
+<pre><code class="js">document.querySelectorAll("ul li:first-child")     // ✔ jedes li, das erstes Kind seiner ul ist
+document.querySelectorAll("ul li:nth-child(1)")    // ✔ gleichbedeutend
+
+document.querySelectorAll("ul li")[0]   // ✘ nur das allererste li der ganzen Seite
+document.querySelectorAll("ul li")[1]   // ✘ das zweite li (Index ab 0!)
+document.querySelectorAll("ul li").get(1)   // ✘ NodeList hat kein get(); auch Index falsch</code></pre>
+<div class="tip"><b>Pseudoklassen im Selektor</b> (<code>:first-child</code>) wirken <b>pro Elternelement</b> → mehrere Treffer. Ein Array-Index <code>[0]</code> liefert immer nur <b>ein</b> Element.</div>
+</article>
+
+<article class="e" data-k="frage 4 rot selektieren getelementsbyclassname queryselectorall punkt klasse getelementbyclassname">
+<h4>Frage 4 – Alle roten Gemüse (Klasse <code>rot</code>)</h4>
+<pre><code class="js">document.getElementsByClassName('rot')   // ✔ Klassenname OHNE Punkt (live HTMLCollection)
+document.querySelectorAll('.rot')        // ✔ CSS-Selektor MIT Punkt (statische NodeList)
+
+document.querySelector('.rot')           // ✘ liefert nur das ERSTE rote Element
+document.querySelectorAll('rot')         // ✘ sucht Tag &lt;rot&gt; – es fehlt der Punkt
+document.getElementByClassName('rot')    // ✘ gibt es nicht (Mehrzahl: Elements!)</code></pre>
+</article>
+
+<article class="e" data-k="frage 5 not attribut class fehlt keine klasse selektor li:not([class]) ohne farbe">
+<h4>Frage 5 – Elemente <em>ohne</em> class-Attribut / ohne Farbe</h4>
+<pre><code class="js">document.querySelectorAll('li:not([class])')           // ✔ li ohne class-Attribut überhaupt
+document.querySelectorAll('li:not(.gruen):not(.rot)')  // ✔ li, das weder gruen noch rot ist (aneinanderreihen = UND)
+
+document.querySelectorAll('li:not(gruen rot)')         // ✘ ungültig (Punkte fehlen, Leerzeichen nicht erlaubt)</code></pre>
+<div class="note">Modern gäbe es auch <code>li:not(.gruen, .rot)</code> (Liste in <code>:not</code>). Attribut-Selektor: <code>[class]</code> = Attribut vorhanden, <code>[class="rot"]</code> = genau dieser Wert, <code>[class~="rot"]</code> = enthält das Wort.</div>
+</article>
+
+<article class="e" data-k="frage 6 nachbar geschwister nextelementsibling nextsibling + adjacent sibling sommer heading id kind nachfahre getelementsbytagname">
+<h4>Frage 6 – Alle li der Liste <em>nach</em> der Überschrift <code>#sommer</code></h4>
+<pre><code class="js">document.querySelectorAll('#sommer + ul li')    // ✔ "+" = direkt folgendes Geschwister-ul, davon alle li
+document.getElementById('sommer').nextElementSibling.getElementsByTagName('li')   // ✔
+
+document.querySelectorAll('#sommer &gt; ul li')   // ✘ "&gt;" = ul wäre KIND von #sommer (ist es nicht)
+document.querySelectorAll('#sommer ul li')     // ✘ ul wäre NACHFAHRE von #sommer (ist es nicht)
+document.getElementById('#sommer')             // ✘ bei getElementById KEIN # !
+document.getElementById('sommer').nextSibling  // ✘ nextSibling = nächster KNOTEN (oft ein Text-Knoten/Zeilenumbruch), nicht das ul</code></pre>
+<table>
+<tr><th>Kombinator</th><th>Bedeutung</th><th>Beispiel</th></tr>
+<tr><td><code>A B</code></td><td>B irgendwo <b>in</b> A (Nachfahre)</td><td><code>ul li</code></td></tr>
+<tr><td><code>A &gt; B</code></td><td>B <b>direktes Kind</b> von A</td><td><code>ul &gt; li</code></td></tr>
+<tr><td><code>A + B</code></td><td>B <b>direkt nach</b> A (nächstes Geschwister)</td><td><code>h2 + ul</code></td></tr>
+<tr><td><code>A ~ B</code></td><td>B irgendwo <b>nach</b> A (gleiche Ebene)</td><td><code>h2 ~ p</code></td></tr>
+</table>
+</article>
+
+<article class="e" data-k="frage 7 letzte liste last-of-type last-child length - 1 children getelementsbytagname index letzte element">
+<h4>Frage 7 – Kinder der <em>letzten</em> ungeordneten Liste</h4>
+<pre><code class="js">document.querySelector('ul:last-of-type').children   // ✔ letztes ul unter seinen Geschwistern
+document.getElementsByTagName('ul')[3].children      // ✔ funktioniert, aber "hart codiert" (bei neuer Liste falsch)
+
+const ul = document.getElementsByTagName('ul');
+ul[ul.length - 1].children                            // ✔ BESTE Lösung: immer die letzte, egal wie viele
+
+document.querySelector('ul:last-child').children     // ✘ nur richtig, wenn das ul das letzte KIND des Elternelements ist
+document.getElementsByTagName('ul')[4].children      // ✘ Index 4 = 5. Liste (es gibt nur 4)</code></pre>
+<div class="tip"><b>Letztes Element eines Arrays/einer Liste:</b> <code>liste[liste.length - 1]</code> oder <code>liste.at(-1)</code>. <code>:last-child</code> prüft, ob es das letzte <em>Kind überhaupt</em> ist (egal welcher Tag), <code>:last-of-type</code> das letzte <em>seines Tags</em>.</div>
+</article>
+
+<article class="e" data-k="frage 8 entfernen remove foreach alle elemente löschen removeall delete querySelectorAll">
+<h4>Frage 8 – Alle roten Gemüse entfernen</h4>
+<pre><code class="js">document.querySelectorAll(".rot").forEach(n =&gt; n.remove());   // ✔
+
+document.removeAllWithQuerySelector('.rot')   // ✘ erfunden
+document.querySelectorAll(".rot").delete()    // ✘ NodeList hat kein delete()
+document.getElementsByClassName('rot').removeAll()   // ✘ erfunden</code></pre>
+<div class="note">Muster: <b>alle holen → <code>forEach</code> → einzeln <code>remove()</code></b>. Es gibt keine «alle-auf-einmal»-Methode.</div>
+</article>
+
+<article class="e" data-k="frage 9 klasse hinzufügen kürbis for of for in classlist add innertext schleife orange">
+<h4>Frage 9 – Dem Kürbis die CSS-Klasse <code>orange</code> geben</h4>
+<pre><code class="js">const gemuese = document.querySelectorAll('li');          // oder getElementsByTagName('li')
+for (let g of gemuese) {                                   // ✔ for…OF = die ELEMENTE
+  if (g.innerText === "Kürbis") {
+    g.classList.add('orange');                             // ✔ classList.add
+  }
+}
+
+for (let g in gemuese) { /* … */ }   // ✘ for…IN = die INDIZES ("0","1",…) als Strings → g.innerText ist undefined
+g.classList.addAll('orange');    // ✘ gibt es nicht
+g.addClass('orange');            // ✘ gibt es nicht (jQuery-Stil)</code></pre>
+<div class="warn"><code>for…of</code> = Werte (Arrays, NodeList, HTMLCollection, Strings). <code>for…in</code> = Schlüsselnamen (für Objekte). Bei Listen/NodeLists fast immer <code>of</code>.</div>
+</article>
+
+<article class="e" data-k="frage 10 hinzufügen spargel appendchild createelement addchild createchild insertchild liste element anhängen">
+<h4>Frage 10 – Spargel zur Frühlingsliste hinzufügen</h4>
+<pre><code class="js">const fruehlingsListe = document.querySelector('#fruehling + ul');   // ul direkt nach der Überschrift
+const spargel = document.createElement('li');       // 1. Element erzeugen
+spargel.innerText = 'Spargel';                       // 2. befüllen
+fruehlingsListe.appendChild(spargel);                // 3. ✔ ans Ende hängen
+
+// ✘ addChild / createChild / insertChild → gibt es alle NICHT</code></pre>
+<p>Merke: <b>createElement → befüllen → appendChild</b>. (Alternativen: <code>append</code>, <code>prepend</code>, <code>insertBefore</code>, <code>insertAdjacentHTML</code>.)</p>
+</article>
+
+<article class="e" data-k="frage 11 verstecken entfernen display none visibility hidden remove unterschied platz">
+<h4>Frage 11 – Verstecken vs. Entfernen</h4>
+<table>
+<tr><th>Code</th><th>Ergebnis</th></tr>
+<tr><td><code>el.style.display = 'none'</code></td><td><b>Verstecken</b>; der Platz wird <b>freigegeben</b>, nachfolgende Elemente <b>rutschen nach</b>. Element bleibt im DOM.</td></tr>
+<tr><td><code>el.style.visibility = 'hidden'</code></td><td><b>Verstecken</b>; der Platz <b>bleibt reserviert</b>, nichts verrutscht. Element bleibt im DOM.</td></tr>
+<tr><td><code>el.remove()</code></td><td><b>Entfernen</b>; Element ist <b>nicht mehr im DOM</b> (Information weg).</td></tr>
+</table>
+<pre><code class="js">el.style.display = "";        // wieder anzeigen (Standard zurück)
+el.hidden = true;             // HTML-Attribut hidden (wie display:none)
+el.classList.add("versteckt"); // Variante via CSS-Klasse (.versteckt { display:none })</code></pre>
+</article>
+
+<article class="e wide" data-k="frage 12 modaler dialog modal beschreiben erklären musterantwort popup overlay backdrop interaktion">
+<h4>Frage 12 – Modaler Dialog beschreiben (Musterantwort für 2 Punkte)</h4>
+<div class="note"><b>Musterantwort:</b> Ein modaler Dialog ist ein Fenster bzw. Overlay, das <b>über der eigentlichen Seite</b> erscheint und diese <b>blockiert</b>: Der Benutzer muss den Dialog zuerst bearbeiten (bestätigen, abbrechen, schliessen), bevor er mit der restlichen Seite weiterarbeiten kann; der Hintergrund ist meist abgedunkelt und nicht klickbar. Er wird verwendet, wenn eine <b>wichtige Entscheidung oder Eingabe</b> nötig ist, z.B. eine Sicherheitsabfrage vor dem Löschen («Wirklich löschen?»), ein Login-Formular, eine Cookie-Einwilligung oder das Anzeigen von Details/Hilfe. Der Benutzer interagiert mit Schaltflächen wie «OK»/«Abbrechen», einem «×» oder der Escape-Taste; danach verschwindet der Dialog und die Seite ist wieder bedienbar. Im Unterschied dazu blockiert ein <b>nicht-modaler</b> Dialog (z.B. Tooltip, Chat-Fenster) die Seite nicht.</div>
+<p>Umsetzung mit dem HTML-Element <code>&lt;dialog&gt;</code> (siehe auch Abschnitt «Konzepte»):</p>
+<pre><code class="html">&lt;dialog id="dlg"&gt;
+  &lt;p&gt;Eintrag wirklich löschen?&lt;/p&gt;
+  &lt;form method="dialog"&gt;                    &lt;!-- schliesst den Dialog automatisch --&gt;
+    &lt;button value="abbrechen"&gt;Abbrechen&lt;/button&gt;
+    &lt;button value="ok"&gt;Löschen&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;
+&lt;button id="open"&gt;Löschen …&lt;/button&gt;</code></pre>
+<pre><code class="js">const dlg = document.querySelector("#dlg");
+document.querySelector("#open").addEventListener("click", () =&gt; dlg.showModal());   // modal (blockiert Seite, Esc schliesst)
+dlg.addEventListener("close", () =&gt; {
+  if (dlg.returnValue === "ok") { /* wirklich löschen */ }
+});
+// dlg.show() = nicht-modal, dlg.close() = schliessen</code></pre>
+</article>
+
+</div>
+</section>
+
+<section id="variants" data-title="Varianten &amp; Aufgabentypen">
+<h2>Varianten &amp; Aufgabentypen (ähnliche Fragen wie in der Probeprüfung)</h2>
+<p class="intro">Dieselbe Frage kommt mit anderer Aufgabe: hier stehen <b>alle gängigen Lösungswege</b> nebeneinander. Bei Mehrfachauswahl sind meist mehrere davon richtig.</p>
+<div class="grid">
+
+<article class="e wide" data-k="selektieren varianten aufgabe lösungen letztes zweites element alle ausser erstes gerade ungerade eltern geschwister kinder anzahl text finden attribut data checkbox checked scope">
+<h4>Selektieren – Aufgabe → alle richtigen Lösungen</h4>
+<table>
+<tr><th>Aufgabe</th><th>Richtige Lösungen</th></tr>
+<tr><td>Erstes <code>li</code> <b>jeder</b> Liste</td><td><code>ul li:first-child</code> · <code>ul li:nth-child(1)</code></td></tr>
+<tr><td>Letztes <code>li</code> <b>jeder</b> Liste</td><td><code>ul li:last-child</code> · <code>ul li:last-of-type</code></td></tr>
+<tr><td>Zweites <code>li</code> jeder Liste</td><td><code>ul li:nth-child(2)</code></td></tr>
+<tr><td>Alle <code>li</code> <b>ausser</b> dem ersten</td><td><code>li:not(:first-child)</code> · <code>li:nth-child(n+2)</code></td></tr>
+<tr><td>Gerade / ungerade <code>li</code></td><td><code>li:nth-child(even)</code> / <code>li:nth-child(odd)</code></td></tr>
+<tr><td>Allererstes <code>li</code> der Seite (<b>ein</b> Element)</td><td><code>document.querySelector("li")</code> · <code>document.querySelectorAll("li")[0]</code> · <code>document.getElementsByTagName("li")[0]</code> · <code>document.querySelectorAll("li").item(0)</code></td></tr>
+<tr><td>Allerletztes <code>li</code> der Seite</td><td><code>const l = document.querySelectorAll("li"); l[l.length - 1]</code> · <code>Array.from(l).at(-1)</code> · <code>[...l].pop()</code></td></tr>
+<tr><td>Element mit ID <code>titel</code></td><td><code>document.getElementById("titel")</code> · <code>document.querySelector("#titel")</code></td></tr>
+<tr><td>Alle mit Klasse <code>rot</code></td><td><code>document.querySelectorAll(".rot")</code> · <code>document.getElementsByClassName("rot")</code></td></tr>
+<tr><td>Alle mit Klasse <code>rot</code> <b>und</b> <code>gross</code></td><td><code>querySelectorAll(".rot.gross")</code> (kein Leerzeichen!)</td></tr>
+<tr><td>Nur <b>direkte</b> Kinder <code>li</code> von <code>ul#liste</code></td><td><code>ul#liste &gt; li</code> · <code>liste.querySelectorAll(":scope &gt; li")</code> · <code>liste.children</code></td></tr>
+<tr><td>Alle mit Attribut <code>data-id</code> / genau Wert 3</td><td><code>[data-id]</code> / <code>[data-id="3"]</code></td></tr>
+<tr><td>Angehakte Checkboxen</td><td><code>input[type="checkbox"]:checked</code></td></tr>
+<tr><td>Alle Links, die auf <code>http</code> beginnen</td><td><code>a[href^="http"]</code></td></tr>
+<tr><td>Elternelement von <code>el</code></td><td><code>el.parentElement</code> · <code>el.parentNode</code> · <code>el.closest("ul")</code> (nächstes passendes Elternelement)</td></tr>
+<tr><td>Nächstes / vorheriges Geschwister</td><td><code>el.nextElementSibling</code> / <code>el.previousElementSibling</code></td></tr>
+<tr><td>Kinder von <code>el</code> / erstes / letztes Kind</td><td><code>el.children</code> · <code>el.firstElementChild</code> · <code>el.lastElementChild</code></td></tr>
+<tr><td>Anzahl <code>li</code> zählen</td><td><code>document.querySelectorAll("li").length</code> (Eigenschaft, keine Klammern)</td></tr>
+<tr><td>Alle Texte der <code>li</code> als Array</td><td><code>[...document.querySelectorAll("li")].map(li =&gt; li.textContent)</code></td></tr>
+<tr><td><code>li</code> mit Text «Kürbis» finden</td><td><code>[...items].find(li =&gt; li.textContent === "Kürbis")</code> – NodeList hat kein <code>find</code>, erst in Array umwandeln</td></tr>
+<tr><td>Prüfen, ob ein Element existiert</td><td><code>if (document.querySelector(".x")) { … }</code> (<code>null</code> = falsy) · <code>querySelectorAll(".x").length &gt; 0</code></td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="verändern varianten text html attribut style klasse wert disabled bild src link href title inhalt ändern setzen aufgabe">
+<h4>Verändern – Aufgabe → Lösung</h4>
+<table>
+<tr><th>Aufgabe</th><th>Lösung</th></tr>
+<tr><td>Text ändern</td><td><code>el.textContent = "Neu"</code> · <code>el.innerText = "Neu"</code></td></tr>
+<tr><td>HTML im Element ändern</td><td><code>el.innerHTML = "&lt;b&gt;Fett&lt;/b&gt;"</code></td></tr>
+<tr><td>Text lesen und erweitern</td><td><code>el.textContent += " (neu)"</code></td></tr>
+<tr><td>Bild / Link ändern</td><td><code>img.src = "b.png"</code> · <code>img.setAttribute("src", "b.png")</code> · <code>a.href = "https://…"</code></td></tr>
+<tr><td>Tooltip / Alt-Text setzen</td><td><code>el.title = "Hilfe"</code> · <code>img.alt = "Beschreibung"</code></td></tr>
+<tr><td>Farbe / Hintergrund / Schrift</td><td><code>el.style.color = "red"</code> · <code>el.style.backgroundColor = "#eee"</code> · <code>el.style.fontSize = "20px"</code> (camelCase + Einheit + String!)</td></tr>
+<tr><td>Klasse hinzufügen / entfernen / umschalten</td><td><code>classList.add("a")</code> · <code>classList.remove("a")</code> · <code>classList.toggle("a")</code></td></tr>
+<tr><td>Klasse ersetzen / prüfen</td><td><code>classList.replace("alt","neu")</code> · <code>classList.contains("a")</code> → true/false</td></tr>
+<tr><td>Eingabewert lesen / setzen / leeren</td><td><code>input.value</code> · <code>input.value = "x"</code> · <code>input.value = ""</code></td></tr>
+<tr><td>Checkbox anhaken / prüfen</td><td><code>cb.checked = true</code> · <code>if (cb.checked)</code></td></tr>
+<tr><td>Button deaktivieren</td><td><code>btn.disabled = true</code></td></tr>
+<tr><td>Attribut setzen / lesen / entfernen / prüfen</td><td><code>setAttribute("k","v")</code> · <code>getAttribute("k")</code> · <code>removeAttribute("k")</code> · <code>hasAttribute("k")</code></td></tr>
+<tr><td>data-Attribut lesen / setzen</td><td><code>el.dataset.id</code> · <code>el.dataset.id = 5</code></td></tr>
+<tr><td>Alle Elemente einer Auswahl ändern</td><td><code>document.querySelectorAll("li").forEach(li =&gt; li.style.color = "red")</code> (nicht auf der NodeList direkt setzen!)</td></tr>
+<tr><td>Seitentitel / Hintergrund der Seite</td><td><code>document.title = "…"</code> · <code>document.body.style.backgroundColor = "lightblue"</code></td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="einfügen varianten anfang ende vor nach ersetzen verschieben klonen kopieren insertadjacentelement insertadjacenthtml beforebegin afterbegin beforeend afterend prepend append before after insertbefore replacewith clonenode position">
+<h4>Einfügen, Ersetzen, Verschieben, Kopieren – Aufgabe → Lösung</h4>
+<table>
+<tr><th>Aufgabe</th><th>Lösung</th></tr>
+<tr><td>Neues <code>li</code> am <b>Ende</b> der Liste</td><td><code>ul.appendChild(li)</code> · <code>ul.append(li)</code> · <code>ul.insertAdjacentElement("beforeend", li)</code></td></tr>
+<tr><td>Neues <code>li</code> am <b>Anfang</b></td><td><code>ul.prepend(li)</code> · <code>ul.insertBefore(li, ul.firstElementChild)</code> · <code>ul.insertAdjacentElement("afterbegin", li)</code></td></tr>
+<tr><td>Neues <code>li</code> <b>vor</b> einem bestimmten <code>ref</code></td><td><code>ul.insertBefore(li, ref)</code> · <code>ref.before(li)</code></td></tr>
+<tr><td>Neues <code>li</code> <b>nach</b> <code>ref</code></td><td><code>ref.after(li)</code> · <code>ul.insertBefore(li, ref.nextElementSibling)</code></td></tr>
+<tr><td><code>li</code> <b>ersetzen</b></td><td><code>alt.replaceWith(neu)</code> · <code>ul.replaceChild(neu, alt)</code></td></tr>
+<tr><td>Element <b>kopieren</b></td><td><code>const k = el.cloneNode(true); parent.appendChild(k)</code> (<code>true</code> = mit Kindern)</td></tr>
+<tr><td>Element <b>verschieben</b></td><td><code>andere.appendChild(el)</code> – ein bereits eingefügtes Element wird verschoben, nicht kopiert</td></tr>
+<tr><td>HTML-Text einfügen</td><td><code>ul.insertAdjacentHTML("beforeend", "&lt;li&gt;Neu&lt;/li&gt;")</code> · <code>ul.innerHTML += "&lt;li&gt;Neu&lt;/li&gt;"</code> (Letzteres baut alles neu auf – Listener gehen verloren)</td></tr>
+<tr><td>Mehrere Elemente auf einmal</td><td><code>ul.append(li1, li2, li3)</code> · Schleife mit <code>createElement</code></td></tr>
+<tr><td>Ganzes Element mit Inhalt bauen</td><td><code>const li = document.createElement("li"); li.textContent = "…"; li.classList.add("x"); ul.appendChild(li);</code></td></tr>
+</table>
+<pre><code class="js">//  &lt;!-- beforebegin --&gt; &lt;ul&gt; &lt;!-- afterbegin --&gt; … &lt;!-- beforeend --&gt; &lt;/ul&gt; &lt;!-- afterend --&gt;
+ul.insertAdjacentElement("beforebegin", el);   // VOR dem ul
+ul.insertAdjacentElement("afterbegin",  el);   // als ERSTES Kind im ul
+ul.insertAdjacentElement("beforeend",   el);   // als LETZTES Kind im ul
+ul.insertAdjacentElement("afterend",    el);   // NACH dem ul</code></pre>
+</article>
+
+<article class="e wide" data-k="entfernen varianten löschen letztes erstes kind alle kinder eltern text remove removechild replacechildren innerhtml parentnode aufgabe">
+<h4>Entfernen – Aufgabe → Lösung</h4>
+<table>
+<tr><th>Aufgabe</th><th>Lösung</th></tr>
+<tr><td>Ein Element entfernen</td><td><code>el.remove()</code> · <code>el.parentNode.removeChild(el)</code> · <code>ul.removeChild(el)</code></td></tr>
+<tr><td>Alle Elemente einer Klasse entfernen</td><td><code>document.querySelectorAll(".rot").forEach(n =&gt; n.remove())</code></td></tr>
+<tr><td>Erstes / letztes Kind entfernen</td><td><code>ul.firstElementChild.remove()</code> / <code>ul.lastElementChild.remove()</code></td></tr>
+<tr><td>Bestimmtes <code>li</code> (3.) entfernen</td><td><code>ul.children[2].remove()</code> · <code>ul.querySelector("li:nth-child(3)").remove()</code></td></tr>
+<tr><td>Alle Kinder entfernen (Liste leeren)</td><td><code>ul.replaceChildren()</code> · <code>ul.innerHTML = ""</code> · <code>while (ul.firstChild) ul.removeChild(ul.firstChild)</code></td></tr>
+<tr><td>Element mit Text «Kürbis» entfernen</td><td><code>[...document.querySelectorAll("li")].find(li =&gt; li.textContent === "Kürbis")?.remove()</code></td></tr>
+<tr><td>Eltern des geklickten Elements entfernen</td><td><code>e.target.parentElement.remove()</code> · <code>e.target.closest("li").remove()</code></td></tr>
+<tr><td>Nur verstecken (Information bleibt)</td><td><code>el.style.display = "none"</code> · <code>el.hidden = true</code> · <code>el.style.visibility = "hidden"</code> (Platz bleibt)</td></tr>
+<tr><td>Wieder anzeigen</td><td><code>el.style.display = ""</code> · <code>el.hidden = false</code> · <code>el.style.visibility = "visible"</code></td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="ereignisse varianten aufgabe klick auf jedes li toggle klasse input live suche keydown enter hover mouseover checkbox change select submit doppelklick einmal timer zähler">
+<h4>Ereignisse – typische Aufgaben in Kurzform</h4>
+<pre><code class="js">// Klick auf JEDES li (bestehende Elemente) – Schleife
+document.querySelectorAll("li").forEach(li =&gt; li.addEventListener("click", () =&gt; li.classList.toggle("erledigt")));
+
+// Klick auf jedes li, auch später hinzugefügte → Delegation am ul
+ul.addEventListener("click", e =&gt; { if (e.target.tagName === "LI") e.target.classList.toggle("erledigt"); });
+
+// Live-Eingabe (bei jedem Tastenanschlag)
+input.addEventListener("input", e =&gt; { anzeige.textContent = e.target.value; });
+
+// Enter-Taste im Feld
+input.addEventListener("keydown", e =&gt; { if (e.key === "Enter") hinzufuegen(); });
+
+// Maus darüber / weg
+box.addEventListener("mouseenter", () =&gt; box.classList.add("hover"));
+box.addEventListener("mouseleave", () =&gt; box.classList.remove("hover"));
+
+// Checkbox / Auswahl geändert
+cb.addEventListener("change", () =&gt; { text.hidden = !cb.checked; });
+select.addEventListener("change", () =&gt; { console.log(select.value); });
+
+// Formular absenden (Seite nicht neu laden)
+form.addEventListener("submit", e =&gt; { e.preventDefault(); /* … */ });
+
+// Doppelklick, Rechtsklick
+el.addEventListener("dblclick", () =&gt; el.remove());
+el.addEventListener("contextmenu", e =&gt; { e.preventDefault(); /* eigenes Menü */ });
+
+// Nur beim ersten Klick
+btn.addEventListener("click", () =&gt; alert("nur einmal"), { once: true });
+
+// Listener wieder entfernen (benannte Funktion nötig)
+btn.removeEventListener("click", beiKlick);
+
+// Auf ALLEN Buttons mit Klasse .zaehler ein eigener Zähler
+document.querySelectorAll(".zaehler").forEach(btn =&gt; {
+  let n = 0;
+  btn.addEventListener("click", () =&gt; { btn.textContent = ++n; });
+});
+
+// Fenster
+window.addEventListener("resize", () =&gt; console.log(innerWidth));
+window.addEventListener("scroll", () =&gt; console.log(scrollY));</code></pre>
+</article>
+
+<article class="e wide" data-k="reihenfolge ablauf schritte sortieren zuordnen befehle richtige reihenfolge erstellen element hinzufügen entfernen ändern rezept parsons">
+<h4>Richtige Reihenfolge der Schritte (Anordnungsaufgaben)</h4>
+<table>
+<tr><th>Ziel</th><th>Reihenfolge</th></tr>
+<tr><td>Neues Element einfügen</td><td>1. <code>createElement</code> → 2. Inhalt/Attribute/Klassen setzen → 3. Elternelement <b>suchen</b> → 4. <code>appendChild</code></td></tr>
+<tr><td>Element ändern</td><td>1. Element <b>suchen</b> (<code>querySelector</code>) → 2. (prüfen ob es existiert) → 3. Eigenschaft setzen</td></tr>
+<tr><td>Auf Klick reagieren</td><td>1. Warten bis DOM geladen (<code>defer</code>/<code>DOMContentLoaded</code>) → 2. Button suchen → 3. <code>addEventListener("click", fn)</code> → 4. in <code>fn</code> ändern</td></tr>
+<tr><td>Formular verarbeiten</td><td>1. <code>submit</code>-Listener → 2. <code>e.preventDefault()</code> → 3. Werte lesen (<code>.value</code>) → 4. umwandeln + validieren → 5. Ergebnis anzeigen / Fehler melden</td></tr>
+<tr><td>Daten laden und anzeigen</td><td>1. <code>fetch(url)</code> → 2. <code>res.ok</code> prüfen → 3. <code>await res.json()</code> → 4. Elemente erzeugen → 5. <code>appendChild</code> (Fehler in <code>catch</code>)</td></tr>
+<tr><td>Liste dynamisch aufbauen</td><td>1. Liste leeren → 2. <code>forEach</code> über die Daten → 3. pro Eintrag <code>createElement</code> + <code>textContent</code> → 4. anhängen</td></tr>
+<tr><td>Zufallszahl-Spiel</td><td>1. Zufallszahl erzeugen → 2. Eingabe lesen (<code>Number</code>) → 3. vergleichen (<code>if/else if</code>) → 4. Rückmeldung; ggf. Schleife</td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="was gibt der code aus ausgabe vorhersagen ergebnis console.log typeof rechnung string zahl var let closure schleife settimeout hoisting">
+<h4>«Was gibt der Code aus?» – Ergebnisse zum Auswendiglernen</h4>
+<pre><code class="js">typeof null;                 // "object"          typeof [] ; // "object"       typeof function(){} // "function"
+"5" + 3;                     // "53"   (+ verkettet)          "5" - 3;   // 2     "5" * "2"; // 10
+3 + 4 + "5";                 // "75"   (von links: 3+4=7)     "5" + 3 + 4; // "534"
+0.1 + 0.2 === 0.3;           // false  (0.30000000000000004)
+"10" &lt; "9";                 // true   (Text!)                10 &lt; "9"; // false (Zahl)
+"5" == 5;   "5" === 5;       // true, false
+null == undefined;           // true       null === undefined; // false       NaN == NaN; // false
+Boolean("0");  Boolean(0);  Boolean("");  Boolean([]);   // true, false, false, true
+10 % 3;  -7 % 3;            // 1, -1
+Math.round(2.5);  Math.round(-2.5);  Math.floor(-2.5);   // 3, -2, -3
+parseInt("42px");  Number("42px");   // 42, NaN
+Number("");  Number(null);  Number(undefined);   // 0, 0, NaN
+
+const a = [1, 2, 3];
+a.slice(1);            // [2,3]  – a bleibt [1,2,3]
+a.splice(1, 1);        // gibt [2] zurück – a ist jetzt [1,3]
+a.push(4);             // gibt die neue LÄNGE zurück (3)
+[10, 9, 1].sort();     // [1, 10, 9]  (Text-Sortierung!)
+a.indexOf(99);         // -1
+"a,b,c".split(",");    // ["a","b","c"]     ["a","b"].join("-");  // "a-b"
+"abc"[1];  "abc".length;   // "b", 3
+
+let x = 5;  console.log(x++);  console.log(x);    // 5, 6   (x++ liefert erst den alten Wert)
+let y = 5;  console.log(++y);                     // 6
+
+const o = { z: 1 };  const p = o;  p.z = 2;  console.log(o.z);   // 2 (gleiche Referenz)
+
+let i;  for (i = 0; i &lt; 3; i++) {}  console.log(i);          // 3
+
+for (var v = 0; v &lt; 3; v++) setTimeout(() =&gt; console.log(v));   // 3 3 3  (var: eine gemeinsame Variable)
+for (let w = 0; w &lt; 3; w++) setTimeout(() =&gt; console.log(w));   // 0 1 2  (let: eine pro Durchlauf)
+
+console.log(h);  var h = 5;     // undefined  (var wird gehoistet, ohne Wert)
+// console.log(k);  let k = 5;  // ReferenceError
+console.log(typeof gibtEsNicht);   // "undefined" (kein Fehler bei typeof)
+
+console.log("1"); setTimeout(() =&gt; console.log("2"), 0); console.log("3");   // 1, 3, 2</code></pre>
+</article>
+
+<article class="e wide" data-k="fehler finden bugs debugging code korrigieren falsch richtig typische anfängerfehler kaputt was ist falsch">
+<h4>«Finde den Fehler» – typische Bugs mit Korrektur</h4>
+<pre><code class="js">// 1) Funktion sofort ausgeführt statt übergeben
+btn.addEventListener("click", alert("Hi"));           // ✘ alert läuft sofort
+btn.addEventListener("click", () =&gt; alert("Hi"));     // ✔
+
+// 2) Zuweisung statt Vergleich
+if (zahl = 5) { }        // ✘ setzt zahl auf 5 (immer true)
+if (zahl === 5) { }      // ✔
+
+// 3) Off-by-one in der Schleife
+for (let i = 0; i &lt;= arr.length; i++) { }   // ✘ arr[arr.length] ist undefined
+for (let i = 0; i &lt;  arr.length; i++) { }   // ✔
+
+// 4) Text statt Zahl
+const summe = prompt("A") + prompt("B");                  // ✘ "12" bei 1 und 2
+const summe2 = Number(prompt("A")) + Number(prompt("B")); // ✔
+
+// 5) # bei getElementById
+document.getElementById("#titel");     // ✘ null
+document.getElementById("titel");      // ✔
+
+// 6) querySelector liefert EIN Element
+document.querySelector("li").forEach(l =&gt; {});     // ✘ TypeError: forEach is not a function
+document.querySelectorAll("li").forEach(l =&gt; {});  // ✔
+
+// 7) Listener auf NodeList
+document.querySelectorAll(".x").addEventListener("click", f);                      // ✘
+document.querySelectorAll(".x").forEach(el =&gt; el.addEventListener("click", f));    // ✔
+
+// 8) const neu zuweisen
+const z = 1;  z = 2;     // ✘ TypeError  →  let z = 1;
+
+// 9) return vergessen
+function add(a, b) { a + b; }          // ✘ gibt undefined zurück
+function add2(a, b) { return a + b; }  // ✔
+
+// 10) CSS-Eigenschaft falsch geschrieben
+// el.style.font-size = "20px";        // ✘ wird als "font minus size" gelesen → Fehler
+el.style.fontSize = "20px";            // ✔ camelCase
+el.style.display = none;               // ✘ none ist keine Variable
+el.style.display = "none";             // ✔ String
+
+// 11) Endlosschleife
+let n = 0; while (n &lt; 5) { console.log(n); }         // ✘ n wird nie erhöht
+let m = 0; while (m &lt; 5) { console.log(m); m++; }    // ✔
+
+// 12) Timer mit Aufruf statt Funktion
+setTimeout(meldung(), 1000);           // ✘ läuft sofort
+setTimeout(meldung, 1000);             // ✔  (oder () =&gt; meldung())
+
+// 13) Auf String-Länge wie eine Funktion zugreifen
+arr.length();                          // ✘ TypeError – length ist eine Eigenschaft
+arr.length;                            // ✔
+
+// 14) Element existiert (noch) nicht
+const b2 = document.querySelector("#gibtsnicht");
+b2.textContent = "x";                  // ✘ TypeError: null
+if (b2) { b2.textContent = "x"; }      // ✔ prüfen (und Selektor/Ladezeitpunkt kontrollieren)</code></pre>
+</article>
+
+<article class="e wide" data-k="zuordnung zuordnen methode wirkung beschreibung dom methoden bedeutung drag matching createelement appendchild remove removechild clonenode replacewith closest matches">
+<h4>Zuordnen: DOM-Methode → Wirkung</h4>
+<table>
+<tr><th>Methode / Eigenschaft</th><th>Wirkung</th></tr>
+<tr><td><code>createElement("li")</code></td><td>Erzeugt ein neues Element im Speicher – <b>noch nicht</b> sichtbar/eingefügt</td></tr>
+<tr><td><code>appendChild(el)</code></td><td>Hängt <code>el</code> als <b>letztes Kind</b> an</td></tr>
+<tr><td><code>prepend(el)</code></td><td>Fügt <code>el</code> als <b>erstes Kind</b> ein</td></tr>
+<tr><td><code>insertBefore(neu, ref)</code></td><td>Fügt <code>neu</code> <b>vor</b> <code>ref</code> ein</td></tr>
+<tr><td><code>remove()</code></td><td>Entfernt das Element selbst aus dem DOM</td></tr>
+<tr><td><code>removeChild(kind)</code></td><td>Entfernt das <b>Kind</b> aus dem Elternelement</td></tr>
+<tr><td><code>replaceWith(neu)</code></td><td>Ersetzt das Element durch <code>neu</code></td></tr>
+<tr><td><code>cloneNode(true)</code></td><td>Kopie <b>mit</b> allen Kindern (<code>false</code> = ohne Kinder)</td></tr>
+<tr><td><code>setAttribute("k","v")</code> / <code>getAttribute("k")</code></td><td>Attribut setzen / lesen</td></tr>
+<tr><td><code>classList.add / remove / toggle / contains</code></td><td>Klasse hinzufügen / entfernen / umschalten / prüfen</td></tr>
+<tr><td><code>querySelector(sel)</code></td><td>Erstes passendes Element oder <code>null</code></td></tr>
+<tr><td><code>querySelectorAll(sel)</code></td><td>Alle passenden als (statische) NodeList</td></tr>
+<tr><td><code>getElementsByClassName / TagName</code></td><td>Live-HTMLCollection (kein <code>forEach</code>)</td></tr>
+<tr><td><code>closest(sel)</code></td><td>Nächstes Elternelement (oder sich selbst), das zum Selektor passt</td></tr>
+<tr><td><code>matches(sel)</code></td><td><code>true</code>, wenn das Element zum Selektor passt</td></tr>
+<tr><td><code>children</code> / <code>childNodes</code></td><td>Nur Element-Kinder / alle Knoten inkl. Text</td></tr>
+<tr><td><code>nextElementSibling</code> / <code>nextSibling</code></td><td>Nächstes <b>Element</b> / nächster Knoten (evtl. Text)</td></tr>
+<tr><td><code>textContent</code> / <code>innerHTML</code></td><td>Reiner Text / HTML-Code im Element</td></tr>
+<tr><td><code>getBoundingClientRect()</code></td><td>Position und Grösse relativ zum sichtbaren Fenster</td></tr>
+<tr><td><code>preventDefault()</code> / <code>stopPropagation()</code></td><td>Standardaktion verhindern / Bubbling stoppen</td></tr>
+<tr><td><code>e.target</code> / <code>e.currentTarget</code></td><td>Angeklicktes Element / Element mit dem Listener</td></tr>
+<tr><td><code>setTimeout</code> / <code>setInterval</code></td><td>Einmal später / wiederholt ausführen</td></tr>
+<tr><td><code>JSON.stringify</code> / <code>JSON.parse</code></td><td>Objekt → Text / Text → Objekt</td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="formular validierung html5 required minlength maxlength pattern type email number checkvalidity validity setcustomvalidity reportvalidity invalid novalidate pflichtfeld">
+<h4>Formular-Validierung mit HTML5 &amp; JS</h4>
+<pre><code class="html">&lt;form id="f"&gt;
+  &lt;input name="name" required minlength="2" maxlength="30"&gt;
+  &lt;input name="mail" type="email" required&gt;
+  &lt;input name="alter" type="number" min="18" max="120"&gt;
+  &lt;input name="plz" pattern="[0-9]{4}" title="4 Ziffern"&gt;
+  &lt;input name="pw" type="password" required minlength="8"&gt;
+  &lt;button&gt;Senden&lt;/button&gt;
+&lt;/form&gt;   &lt;!-- novalidate am form schaltet die Browser-Prüfung ab --&gt;</code></pre>
+<pre><code class="js">const f = document.querySelector("#f");
+f.checkValidity();                    // true/false – alle Felder gültig?
+f.reportValidity();                   // wie checkValidity, zeigt zusätzlich die Browser-Meldung
+input.validity.valueMissing;          // Pflichtfeld leer?
+input.validity.typeMismatch;          // z.B. keine gültige E-Mail
+input.validity.tooShort;              // zu kurz
+input.validationMessage;              // Text der Browser-Fehlermeldung
+input.setCustomValidity("Eigene Meldung");   // eigene Meldung ("" = wieder gültig)
+f.addEventListener("submit", e =&gt; { if (!f.checkValidity()) e.preventDefault(); });</code></pre>
+<pre><code class="css">input:invalid { border: 2px solid red; }
+input:valid   { border: 2px solid green; }</code></pre>
+<div class="note">Clientseitige Prüfung ist nur Komfort – der Server muss immer nochmals prüfen.</div>
+</article>
+
+</div>
+</section>
+
+<section id="history" data-title="Geschichte &amp; Grundbegriffe">
+<h2>Geschichte &amp; Grundbegriffe</h2>
+<p class="intro">Wofür JavaScript da ist, woher es kommt und wie es sich entwickelt hat.</p>
+<div class="grid">
+
+<article class="e wide" data-k="geschichte zeitstrahl timeline history brendan eich netscape mocha livescript ecmascript node v8 ajax es6 2015 1995 entstehung">
+<h4>Zeitstrahl der JavaScript-Geschichte</h4>
+<table>
+<tr><th>Jahr</th><th>Ereignis</th></tr>
+<tr><td>1995</td><td><b>Brendan Eich</b> entwickelt bei <b>Netscape</b> in ca. 10 Tagen die Sprache – zuerst «Mocha», dann «LiveScript», im Dezember 1995 umbenannt in <b>JavaScript</b> (Marketing: Java war damals im Hype; mit Java hat es sonst nichts zu tun). Erste Version in Netscape Navigator 2.0.</td></tr>
+<tr><td>1996</td><td>Microsoft baut einen eigenen Klon («<b>JScript</b>») in den Internet Explorer 3. Browser-Kriege → Inkompatibilitäten. Netscape gibt JS an die Standardisierungsorganisation <b>ECMA</b>.</td></tr>
+<tr><td>1997</td><td><b>ECMAScript 1</b> (ECMA-262) – der erste Standard. «ECMAScript» = der Standard, «JavaScript» = die bekannteste Umsetzung.</td></tr>
+<tr><td>1999</td><td><b>ES3</b>: Regex, <code>try/catch</code>, bessere Strings. Blieb ~10 Jahre die Basis.</td></tr>
+<tr><td>2001</td><td>Douglas Crockford entdeckt/popularisiert <b>JSON</b> (Datenformat, aus JS-Objekt-Schreibweise entstanden).</td></tr>
+<tr><td>2005</td><td><b>AJAX</b> (Begriff von Jesse James Garrett): Daten nachladen ohne die Seite neu zu laden (Gmail, Google Maps). Beginn der «Web-Apps».</td></tr>
+<tr><td>2006</td><td><b>jQuery</b> vereinfacht DOM-Zugriff und gleicht Browser-Unterschiede aus.</td></tr>
+<tr><td>2008</td><td>Google Chrome mit der schnellen <b>V8-Engine</b> → JS wird richtig schnell.</td></tr>
+<tr><td>2009</td><td><b>Node.js</b> (Ryan Dahl, nutzt V8): JavaScript auch auf dem Server. <b>ES5</b>: <code>forEach/map/filter</code>, <code>JSON</code>, strict mode.</td></tr>
+<tr><td>2010–2014</td><td>Frameworks: AngularJS (2010), <b>React</b> (2013), Vue (2014). npm als Paketmanager. TypeScript (2012, Microsoft) = JS + Typen.</td></tr>
+<tr><td>2015</td><td><b>ES2015 / «ES6»</b> – das grosse Update: <code>let/const</code>, Arrow-Functions, Klassen, Template-Strings, Promises, Module, Destructuring, Spread. Seither <b>jährliche</b> kleine Releases (ES2016, ES2017 …).</td></tr>
+<tr><td>2017</td><td><b>ES2017</b>: <code>async/await</code>.</td></tr>
+<tr><td>2020</td><td><b>ES2020</b>: Optional Chaining <code>?.</code>, Nullish Coalescing <code>??</code>, BigInt.</td></tr>
+<tr><td>heute</td><td>JS läuft im Browser, auf dem Server (Node.js, Deno, Bun), in Apps (Electron), Mobile (React Native) …</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="eigenschaften was ist javascript dynamisch interpretiert single thread event getrieben prototype">
+<h4>Eigenschaften von JavaScript</h4>
+<ul>
+<li><b>Skriptsprache</b>: wird im Browser von einer Engine (V8, SpiderMonkey, JavaScriptCore) direkt ausgeführt – kein manuelles Kompilieren.</li>
+<li><b>Dynamisch typisiert</b>: Variablen haben keinen festen Typ, der Wert hat einen (<code>let x = 5; x = "Text";</code> geht).</li>
+<li><b>Einfädig (single-threaded)</b>: ein Befehl nach dem anderen; Wartendes (Timer, Netzwerk) läuft über Callbacks/Promises und die <b>Event-Loop</b>.</li>
+<li><b>Ereignisgesteuert</b>: Code reagiert auf Klicks, Eingaben, Timer …</li>
+<li><b>Multi-Paradigma</b>: prozedural, objektorientiert (Prototypen/Klassen), funktional.</li>
+<li><b>Gross-/Kleinschreibung zählt</b>: <code>name</code> ≠ <code>Name</code>.</li>
+</ul>
+</article>
+
+<article class="e" data-k="html css js rolle frontend backend client server aufgabe">
+<h4>Rolle im Web: HTML, CSS, JS</h4>
+<table>
+<tr><th>Technologie</th><th>Aufgabe</th></tr>
+<tr><td>HTML</td><td><b>Struktur/Inhalt</b> (Überschriften, Absätze, Buttons)</td></tr>
+<tr><td>CSS</td><td><b>Aussehen</b> (Farben, Layout, Abstände)</td></tr>
+<tr><td>JavaScript</td><td><b>Verhalten</b> (Interaktion, Logik, Daten nachladen, HTML verändern)</td></tr>
+</table>
+<p><b>Frontend</b> = läuft im Browser des Benutzers (Client). <b>Backend</b> = läuft auf dem Server (Datenbank, Logik).</p>
+</article>
+
+<article class="e" data-k="java vs javascript unterschied ecmascript versionen es5 es6 standard">
+<h4>JavaScript ≠ Java, ECMAScript = JS-Standard</h4>
+<ul>
+<li>Java und JavaScript sind völlig verschiedene Sprachen (Namensähnlichkeit = Marketing).</li>
+<li><b>ECMAScript</b> (ES) ist die offizielle Spezifikation; wird vom Komitee <b>TC39</b> weiterentwickelt.</li>
+<li>«ES6» = ES2015. Was in modernen Browsern geht: <code>let/const</code>, <code>=&gt;</code>, Template-Strings <code>`…`</code>, Klassen, Module, Promises, <code>async/await</code>.</li>
+<li>Veraltet: <code>var</code>, <code>document.write</code>, <code>onclick=""</code> im HTML.</li>
+</ul>
+</article>
+
+<article class="e" data-k="dom browser bom window document objektmodell baum wie browser js ausführt engine event loop">
+<h4>Wie läuft JS im Browser? (DOM, Window, Event-Loop)</h4>
+<ul>
+<li>Der Browser liest das HTML und baut den <b>DOM</b> (Document Object Model) – einen Baum aus Objekten (Elemente, Text, Attribute).</li>
+<li><code>window</code> = globales Objekt (Fenster/Tab); <code>document</code> = die Seite (Einstieg in den DOM). <code>alert()</code> ist eigentlich <code>window.alert()</code>.</li>
+<li>JS kann den DOM ändern → Browser zeichnet die Seite neu (kein Neuladen nötig).</li>
+<li><b>Event-Loop</b>: JS führt Code der Reihe nach aus; Ereignisse (Klick, Timer, Antwort vom Server) werden in eine Warteschlange gelegt und der Reihe nach abgearbeitet, sobald der Code frei ist.</li>
+</ul>
+<pre><code class="js">console.log("1");
+setTimeout(() =&gt; console.log("2"), 0);   // wird ans Ende der Warteschlange gestellt
+console.log("3");
+// Ausgabe: 1, 3, 2</code></pre>
+</article>
+
+</div>
+</section>
+<section id="basics" data-title="Grundlagen">
+<h2>Grundlagen: Ausgabe, Variablen, Datentypen</h2>
+<p class="intro">Die Bausteine jedes Programms.</p>
+<div class="grid">
+
+<article class="e" data-k="ausgabe output console.log alert document.write prompt confirm dialog eingabe">
+<h4>Ein- und Ausgabe: <code>console.log</code>, <code>alert</code>, <code>prompt</code> …</h4>
+<p class="w"><b>Wann:</b> <code>console.log</code> zum Debuggen (F12 → Konsole). <code>alert/prompt/confirm</code> für einfache Dialoge in Übungen.</p>
+<pre><code class="js">console.log("Text", 42, [1,2]);   // Ausgabe in der Konsole (F12)
+console.error("Fehler");           // rot
+console.warn("Warnung");           // gelb
+console.table([{a:1},{a:2}]);      // Tabelle
+
+alert("Hallo");                    // Meldung mit OK
+const name = prompt("Name?");      // Eingabe → IMMER ein String (oder null bei Abbrechen)
+const ok   = confirm("Sicher?");   // true (OK) / false (Abbrechen)
+
+document.write("Hallo Welt");      // schreibt ins HTML (Übung; sonst vermeiden)</code></pre>
+<div class="warn"><code>document.write</code> nach dem Laden der Seite <b>ersetzt die ganze Seite</b>. <code>prompt</code> liefert einen <b>String</b>: <code>prompt("Zahl?") + 1</code> ergibt <code>"51"</code>, nicht <code>6</code>. Bei «Abbrechen» kommt <code>null</code>.</div>
+</article>
+
+<article class="e" data-k="variablen let const var deklaration zuweisung konstante scope">
+<h4>Variablen: <code>let</code>, <code>const</code>, <code>var</code></h4>
+<p class="w"><b>Wann:</b> <code>const</code> als Standard (Wert wird nicht neu zugewiesen), <code>let</code> wenn sich der Wert ändert, <code>var</code> nie (veraltet).</p>
+<pre><code class="js">let alter = 23;        // veränderbar
+alter = 24;            // OK
+alter += 1;            // 25
+
+const PI = 3.14159;    // nicht neu zuweisbar
+// PI = 3;             // TypeError: Assignment to constant variable
+
+const liste = [1, 2];  // const schützt nur die Zuweisung, nicht den Inhalt:
+liste.push(3);         // OK → [1,2,3]
+
+let a, b = 2;          // a ist undefined
+let x = 1, y = 2;      // mehrere in einer Zeile
+
+var alt = "veraltet";  // var: funktionsweit gültig, wird "gehoistet" → Fehlerquelle</code></pre>
+<ul>
+<li>Namen: <code>camelCase</code>, beginnen mit Buchstabe, <code>_</code> oder <code>$</code>; keine Leerzeichen; keine Schlüsselwörter (<code>class</code>, <code>let</code>…).</li>
+<li>Ohne <code>let/const</code> entsteht eine <b>globale Variable</b> (<code>count = 0;</code>) – unsauber, vermeiden.</li>
+</ul>
+</article>
+
+<article class="e" data-k="datentypen typen string number boolean null undefined object symbol bigint typeof primitive">
+<h4>Datentypen &amp; <code>typeof</code></h4>
+<table>
+<tr><th>Typ</th><th>Beispiel</th><th>typeof</th></tr>
+<tr><td>String</td><td><code>"Hallo"</code> <code>'Hi'</code> <code>`Hi`</code></td><td>"string"</td></tr>
+<tr><td>Number</td><td><code>42</code> <code>3.14</code> <code>NaN</code> <code>Infinity</code></td><td>"number"</td></tr>
+<tr><td>Boolean</td><td><code>true</code> <code>false</code></td><td>"boolean"</td></tr>
+<tr><td>undefined</td><td>Variable ohne Wert</td><td>"undefined"</td></tr>
+<tr><td>null</td><td>«bewusst leer»</td><td>"object" (Sprachfehler!)</td></tr>
+<tr><td>Object</td><td><code>{a:1}</code> <code>[1,2]</code> Funktionen</td><td>"object" / "function"</td></tr>
+<tr><td>BigInt / Symbol</td><td><code>10n</code> / <code>Symbol()</code></td><td>selten nötig</td></tr>
+</table>
+<pre><code class="js">typeof "abc";      // "string"
+typeof 5;          // "number"
+typeof [1,2];      // "object" (Array-Test: Array.isArray([1,2]) → true)
+typeof undefined;  // "undefined"
+typeof null;       // "object"  ← historischer Fehler</code></pre>
+<p><b>Primitive</b> (String, Number, Boolean, null, undefined) werden als Wert kopiert. <b>Objekte/Arrays</b> werden als Referenz weitergegeben.</p>
+</article>
+
+<article class="e" data-k="operatoren arithmetik plus minus modulo rest exponent inkrement zuweisung">
+<h4>Rechen- und Zuweisungsoperatoren</h4>
+<pre><code class="js">5 + 2;   // 7
+5 - 2;   // 3
+5 * 2;   // 10
+5 / 2;   // 2.5   (Division ist immer Kommazahl)
+5 % 2;   // 1     Modulo = Rest  → gerade/ungerade prüfen: n % 2 === 0
+2 ** 3;  // 8     Potenz
+
+let n = 5;
+n++;        // 6  (n = n + 1)
+n--;        // 5
+n += 10;    // 15 (n = n + 10)   ebenso -=  *=  /=  %=
+
+"a" + "b";  // "ab"  Strings verketten
+1 / 0;      // Infinity</code></pre>
+</article>
+
+<article class="e" data-k="vergleich vergleichsoperatoren gleich === == != !== grösser kleiner strikt loose">
+<h4>Vergleichsoperatoren: <code>===</code> statt <code>==</code></h4>
+<p class="w"><b>Wann:</b> Immer <code>===</code> / <code>!==</code> (prüft Wert <em>und</em> Typ). <code>==</code> wandelt Typen um und überrascht.</p>
+<pre><code class="js">5 === 5;      // true
+5 === "5";    // false  (Typ verschieden)
+5 ==  "5";    // true   (wandelt um – vermeiden)
+5 !== "5";    // true
+5 &gt; 3; 5 &gt;= 5; 3 &lt; 5; 3 &lt;= 3;   // Grösser/Kleiner
+
+null == undefined;   // true
+null === undefined;  // false
+NaN === NaN;         // false ← NaN ist nie gleich! → Number.isNaN(x) benutzen
+"10" &lt; "9";         // true  (Strings werden alphabetisch verglichen!)
+10 &lt; 9;             // false
+</code></pre>
+</article>
+
+<article class="e" data-k="logische operatoren und oder nicht and or not && || ! nullish ?? optional chaining ?. ternary bedingung">
+<h4>Logische Operatoren, <code>??</code>, <code>?.</code>, ternär</h4>
+<pre><code class="js">a &amp;&amp; b     // UND: beide wahr
+a || b     // ODER: mindestens einer wahr
+!a         // NICHT
+
+// Kurzschluss: a || b liefert a, wenn a "truthy" ist, sonst b
+const name = eingabe || "Gast";       // Standardwert
+const wert = eingabe ?? "Standard";   // nur bei null/undefined (0 und "" bleiben!)
+
+user?.adresse?.ort;     // Optional Chaining: undefined statt Fehler, wenn user/adresse fehlt
+
+// Ternär: Bedingung ? wennWahr : wennFalsch
+const text = alter &gt;= 18 ? "volljährig" : "minderjährig";
+
+// Zeitfenster (aus hello-user): beide Bedingungen müssen stimmen
+if (stunde &gt;= 5 &amp;&amp; stunde &lt; 11) { /* Morgen */ }</code></pre>
+</article>
+
+<article class="e" data-k="truthy falsy wahr falsch boolean umwandlung">
+<h4>Truthy / Falsy</h4>
+<p class="w"><b>Wann:</b> In <code>if (…)</code> wird jeder Wert zu true/false umgewandelt.</p>
+<p><b>Falsy</b> (= false): <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code>. <b>Alles andere ist truthy</b> – auch <code>"0"</code>, <code>"false"</code>, <code>[]</code>, <code>{}</code>.</p>
+<pre><code class="js">if (name) { /* name ist nicht leer/null/undefined */ }
+if (!liste.length) { /* Liste ist leer */ }
+Boolean("hi");   // true
+!!0;             // false (doppeltes Not = in Boolean umwandeln)</code></pre>
+</article>
+
+<article class="e" data-k="typumwandlung number parseint parsefloat string tostring isnan konvertieren zahl text">
+<h4>Typumwandlung: String ⇄ Number</h4>
+<p class="w"><b>Wann:</b> Immer bei <code>prompt()</code>, <code>input.value</code>, <code>innerText</code> – das sind alles Strings!</p>
+<pre><code class="js">Number("42");        // 42
+Number("3.5");       // 3.5
+Number("");          // 0      ← Achtung: leerer String wird 0
+Number("abc");       // NaN    (Not a Number)
+Number(null);        // 0
+Number(undefined);   // NaN
+
+parseInt("42px");    // 42     liest bis zum ersten ungültigen Zeichen
+parseInt("101", 2);  // 5      (2. Argument = Basis; immer angeben: 10)
+parseFloat("3.14abc"); // 3.14
++"42";               // 42     (Kurzform)
+
+String(42);          // "42"
+(42).toString();     // "42"
+42 + "";             // "42"
+(3.14159).toFixed(2);// "3.14" ← liefert einen STRING
+
+isNaN("abc");        // true
+Number.isNaN(NaN);   // true   (strenger, nur für echtes NaN)
+
+"5" + 1;   // "51"  (+ verkettet, sobald ein String dabei ist)
+"5" - 1;   // 4     (- rechnet immer)
+"5" * "2"; // 10</code></pre>
+</article>
+
+<article class="e" data-k="strings text zeichenkette methoden length slice split replace trim includes touppercase">
+<h4>String-Methoden</h4>
+<pre><code class="js">const s = "  Hallo Welt  ";
+s.length;                    // 14
+s.trim();                    // "Hallo Welt"  (Leerraum weg)
+s.toUpperCase();             // "  HALLO WELT  "
+s.toLowerCase();
+"Hallo"[0];                  // "H"    (auch "Hallo".charAt(0), .at(-1) = letztes)
+"Hallo".indexOf("l");        // 2      (-1 wenn nicht gefunden)
+"Hallo".includes("all");     // true
+"Hallo".startsWith("Ha");    // true
+"Hallo".endsWith("lo");      // true
+"Hallo".slice(1, 3);         // "al"   (Start inkl., Ende exkl.; negativ zählt von hinten)
+"Hallo".substring(1, 3);     // "al"
+"a,b,c".split(",");          // ["a","b","c"]
+"Hallo".split("");           // ["H","a","l","l","o"]
+"aXbX".replace("X", "-");    // "a-bX" (nur erstes)
+"aXbX".replaceAll("X", "-"); // "a-b-"
+"ab".repeat(3);              // "ababab"
+"5".padStart(3, "0");        // "005"
+"Hallo".concat(" Welt");     // "Hallo Welt"
+"b".localeCompare("a");      // 1 (Sortierung nach Alphabet)</code></pre>
+<div class="note">Strings sind <b>unveränderlich</b>: Methoden geben immer einen <em>neuen</em> String zurück → <code>s = s.trim();</code></div>
+</article>
+
+<article class="e" data-k="template literal backticks string interpolation ${} mehrzeilig verketten">
+<h4>Template-Strings (Backticks) <code>`…${x}…`</code></h4>
+<p class="w"><b>Wann:</b> Text mit Variablen mischen – lesbarer als <code>"a" + x + "b"</code>. Auch mehrzeilig.</p>
+<pre><code class="js">const name = "Arun", alter = 23;
+const alt1 = "Hallo " + name + ", du bist " + alter;      // altmodisch
+const neu  = `Hallo ${name}, du bist ${alter + 1} nächstes Jahr`;   // Ausdrücke erlaubt
+
+const html = `
+  &lt;li class="item"&gt;
+    ${name}
+  &lt;/li&gt;`;                                             // mehrzeilig
+
+console.log(`Hallo ihr ${times} lustigen`);               // aus example1.html</code></pre>
+</article>
+
+<article class="e" data-k="math zufall random runden floor ceil round max min abs pow sqrt pi ganzzahl">
+<h4><code>Math</code>: Runden &amp; Zufall</h4>
+<pre><code class="js">Math.round(2.5);   // 3      kaufmännisch runden
+Math.floor(2.9);   // 2      abrunden (Richtung -∞)
+Math.ceil(2.1);    // 3      aufrunden
+Math.trunc(-2.9);  // -2     Nachkommastellen abschneiden
+Math.abs(-5);      // 5
+Math.max(1, 5, 3); // 5      Math.min(...)
+Math.max(...zahlen); // mit Array
+Math.pow(2, 3);    // 8      (= 2 ** 3)
+Math.sqrt(16);     // 4
+Math.PI;           // 3.14159…
+
+Math.random();                         // Kommazahl 0 ≤ x &lt; 1
+Math.floor(Math.random() * 100) + 1;   // ganze Zahl 1–100  (aus guess-number)
+Math.floor(Math.random() * 6) + 1;     // Würfel 1–6
+
+// Allgemein: Zufallszahl von min bis max (inklusive)
+const zufall = (min, max) =&gt; Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Zufälliges Element aus Array
+const el = liste[Math.floor(Math.random() * liste.length)];</code></pre>
+</article>
+
+<article class="e" data-k="datum zeit date new date getfullyear getmonth gethours gettime uhrzeit">
+<h4><code>Date</code>: Datum &amp; Uhrzeit</h4>
+<pre><code class="js">const jetzt = new Date();            // aktuelle Zeit
+jetzt.getFullYear();   // 2026
+jetzt.getMonth();      // 0–11 !!  (0 = Januar, 11 = Dezember)
+jetzt.getDate();       // 1–31 (Tag im Monat)
+jetzt.getDay();        // 0–6  (0 = Sonntag, 1 = Montag …)
+jetzt.getHours();      // 0–23 (aus hello-user)
+jetzt.getMinutes();    // 0–59
+jetzt.getSeconds();
+jetzt.getTime();       // Millisekunden seit 1.1.1970
+Date.now();            // dasselbe, ohne Objekt
+
+new Date(2026, 0, 31);              // 31. Januar 2026 (Monat 0-basiert!)
+new Date("2026-09-29");             // aus Text (ISO-Format)
+jetzt.toLocaleDateString("de-CH");  // "29.9.2026"
+jetzt.toLocaleTimeString("de-CH");  // "15:04:05"
+
+// Tage zwischen zwei Daten
+const tage = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));</code></pre>
+<pre><code class="js">// Begrüssung nach Tageszeit (hello-user)
+const h = new Date().getHours();
+if (h &lt; 11 &amp;&amp; h &gt;= 5)       alert("Good morning");
+else if (h &lt; 17 &amp;&amp; h &gt;= 11) alert("Good afternoon");
+else if (h &lt; 21 &amp;&amp; h &gt;= 17) alert("Good evening");
+else                         alert("Good night");</code></pre>
+</article>
+
+<article class="e" data-k="kommentare comment semikolon syntax regeln strict mode use strict">
+<h4>Kommentare, Semikolon, Syntax-Regeln</h4>
+<pre><code class="js">// Einzeiliger Kommentar
+/* Mehrzeiliger
+   Kommentar */
+
+let a = 1;   // Semikolon beendet eine Anweisung (meist optional, aber empfohlen)
+
+{ /* Block: Code zwischen geschweiften Klammern */ }
+
+"use strict";  // strengerer Modus: verbietet z.B. undeklarierte Variablen (Module sind automatisch strict)</code></pre>
+<ul>
+<li>Strings in <code>"…"</code> oder <code>'…'</code> – gemischt beim Escapen: <code>"Er sagte \"Hi\""</code>, <code>'It\'s'</code>, Zeilenumbruch <code>\n</code>, Tab <code>\t</code>.</li>
+<li>Gross-/Kleinschreibung ist relevant.</li>
+<li>Klammern immer paarweise: <code>( )</code> <code>{ }</code> <code>[ ]</code>.</li>
+</ul>
+</article>
+
+</div>
+</section>
+
+<section id="flow" data-title="Kontrollfluss">
+<h2>Kontrollfluss: Bedingungen &amp; Schleifen</h2>
+<p class="intro">Entscheidungen treffen und Code wiederholen.</p>
+<div class="grid">
+
+<article class="e" data-k="if else bedingung verzweigung entscheidung else if">
+<h4><code>if</code> / <code>else if</code> / <code>else</code></h4>
+<p class="w"><b>Wann:</b> Code nur ausführen, wenn eine Bedingung zutrifft.</p>
+<pre><code class="js">if (zahl &gt; 100) {
+  alert("Zu hoch");
+} else if (zahl &lt; 1) {
+  alert("Zu tief");
+} else {
+  alert("OK");
+}
+
+if (x) return;            // ohne {} nur bei EINER Anweisung – besser immer {} setzen
+
+// Beispiel guess-number
+if (userGuess == randomNumber)      alert("Richtig!");
+else if (userGuess &lt; randomNumber)  alert("Too low!");
+else                                alert("Too high!");</code></pre>
+</article>
+
+<article class="e" data-k="switch case break default mehrfachauswahl">
+<h4><code>switch</code></h4>
+<p class="w"><b>Wann:</b> Ein Wert wird mit vielen festen Möglichkeiten verglichen (statt langer <code>else if</code>-Kette).</p>
+<pre><code class="js">switch (operator) {
+  case "+":
+    ergebnis = a + b;
+    break;              // ohne break "fällt" er ins nächste case durch!
+  case "-":
+    ergebnis = a - b;
+    break;
+  case "*":
+  case "x":             // mehrere cases zusammen
+    ergebnis = a * b;
+    break;
+  default:
+    alert("Ungültiger Operator");
+}</code></pre>
+</article>
+
+<article class="e" data-k="for schleife loop zählen wiederholen iteration">
+<h4><code>for</code>-Schleife</h4>
+<p class="w"><b>Wann:</b> Anzahl der Wiederholungen ist bekannt (z.B. Array durchgehen, 10× etwas tun).</p>
+<pre><code class="js">// for (Start; Bedingung; Schritt)
+for (let i = 0; i &lt; 5; i++) {
+  console.log(i);          // 0 1 2 3 4
+}
+
+// Array rückwärts
+for (let i = liste.length - 1; i &gt;= 0; i--) { }
+
+// Schrittweite 2
+for (let i = 0; i &lt;= 10; i += 2) { }
+
+// Verschachtelt (Tabelle / Raster)
+for (let z = 0; z &lt; 3; z++) {
+  for (let s = 0; s &lt; 3; s++) { console.log(z, s); }
+}</code></pre>
+</article>
+
+<article class="e" data-k="while do while schleife bedingung solange unbekannt anzahl endlos">
+<h4><code>while</code> / <code>do…while</code></h4>
+<p class="w"><b>Wann:</b> Anzahl unbekannt – «solange Bedingung wahr». <code>do…while</code> läuft mindestens einmal.</p>
+<pre><code class="js">// Zahlen einlesen bis Eingabe leer ist (aus sum-num)
+let eingabe = prompt("Zahl?");
+while (eingabe !== "") {
+  numbers.push(Number(eingabe));
+  eingabe = prompt("Zahl?");         // Variable in der Schleife ÄNDERN, sonst Endlosschleife!
+}
+
+let n = 3;
+while (n &gt; 0) { n--; }
+
+do {
+  raten = prompt("Zahl?");
+} while (raten != geheim);           // mind. 1 Durchlauf</code></pre>
+<div class="warn">Endlosschleife = Bedingung wird nie false → Tab hängt. Bei <code>prompt</code> liefert «Abbrechen» <code>null</code>, nicht <code>""</code> – deshalb auch <code>null</code> prüfen: <code>while (eingabe !== "" &amp;&amp; eingabe !== null)</code></div>
+</article>
+
+<article class="e" data-k="for of for in foreach schleife array objekt iterieren durchlaufen">
+<h4><code>for…of</code>, <code>for…in</code>, <code>forEach</code></h4>
+<pre><code class="js">const arr = ["a", "b", "c"];
+for (const wert of arr) { console.log(wert); }        // Werte: a b c
+
+for (const i in arr) { console.log(i, arr[i]); }      // Indizes (Strings "0","1","2") – eher für Objekte
+
+const obj = { x: 1, y: 2 };
+for (const key in obj) { console.log(key, obj[key]); } // x 1 / y 2
+
+arr.forEach((wert, index) =&gt; console.log(index, wert)); // Array-Methode (kein break möglich)
+
+for (const [i, w] of arr.entries()) { }               // Index UND Wert
+
+document.querySelectorAll("li").forEach(li =&gt; li.classList.add("x")); // DOM-Elemente</code></pre>
+</article>
+
+<article class="e" data-k="break continue abbrechen überspringen schleife verlassen">
+<h4><code>break</code> &amp; <code>continue</code></h4>
+<pre><code class="js">for (let i = 0; i &lt; 10; i++) {
+  if (i === 3) continue;   // Durchlauf überspringen, weiter mit i=4
+  if (i === 6) break;      // Schleife komplett beenden
+  console.log(i);          // 0 1 2 4 5
+}
+
+// Spoofify (addAlbum): nach drei Covers abbrechen
+let count = 0;
+for (let i = 0; i &lt; albumCovers.length; i++) {
+  count += 1;
+  if (count &gt; 2) { break; }
+}</code></pre>
+</article>
+
+</div>
+</section>
+<section id="functions" data-title="Funktionen">
+<h2>Funktionen</h2>
+<p class="intro">Wiederverwendbare Code-Blöcke.</p>
+<div class="grid">
+
+<article class="e" data-k="funktion function deklaration definieren aufrufen return parameter argumente">
+<h4>Funktionen definieren &amp; aufrufen</h4>
+<p class="w"><b>Wann:</b> Code, den du mehrfach brauchst oder der eine klare Aufgabe hat. Ohne <code>return</code> gibt eine Funktion <code>undefined</code> zurück.</p>
+<pre><code class="js">function addiere(a, b) {       // Deklaration (Parameter a, b)
+  return a + b;                // gibt Wert zurück und beendet die Funktion
+}
+addiere(2, 3);                 // 5  (Argumente 2, 3)
+
+function hallo() { console.log("Hi"); }   // ohne return → undefined
+hallo();                       // ohne () wird die Funktion NICHT ausgeführt
+
+// aus example1.html: Fibonacci
+function fibonacci(times) {
+  let previousNumber = 0, nextNumber = 1, result;
+  while (times &gt;= 0) {
+    result = previousNumber + nextNumber;
+    previousNumber = nextNumber;
+    nextNumber = result;
+    times--;
+  }
+  return result;
+}</code></pre>
+</article>
+
+<article class="e" data-k="arrow function pfeilfunktion => expression anonym funktionsausdruck callback">
+<h4>Arrow-Functions <code>=&gt;</code> &amp; Funktionsausdrücke</h4>
+<p class="w"><b>Wann:</b> Kurze Funktionen, v.a. als <b>Callback</b> (Event-Handler, <code>map</code>, <code>filter</code> …).</p>
+<pre><code class="js">const quadrat1 = function (x) { return x * x; };   // Funktionsausdruck
+const quadrat2 = (x) =&gt; { return x * x; };          // Arrow
+const quadrat3 = x =&gt; x * x;                        // 1 Parameter, 1 Ausdruck → () {} return weglassen
+const summe    = (a, b) =&gt; a + b;
+const objekt   = () =&gt; ({ name: "Arun" });           // Objekt zurückgeben: in Klammern!
+const nix      = () =&gt; console.log("Hi");
+
+// typisch: als Callback
+button.onclick = () =&gt; { alert("Hi"); };
+zahlen.map(z =&gt; z * 2);
+setTimeout(() =&gt; alert("Hi"), 1000);
+
+// Anonyme Funktion (aus hello-world/script.js)
+button.onclick = function () { alert("Good Boy"); };</code></pre>
+<div class="note">Unterschied: Arrow-Functions haben kein eigenes <code>this</code>. In Event-Handlern deshalb <code>event.currentTarget</code> statt <code>this</code> nutzen.</div>
+</article>
+
+<article class="e" data-k="standardwert default parameter rest spread argumente arguments variable anzahl">
+<h4>Default-Parameter, Rest &amp; Spread</h4>
+<pre><code class="js">function gruss(name = "Gast", gruss = "Hallo") {   // Standardwerte
+  return `${gruss} ${name}`;
+}
+gruss();            // "Hallo Gast"
+gruss("Arun");      // "Hallo Arun"
+
+function summe(...zahlen) {                         // Rest: sammelt alle Argumente in ein Array
+  return zahlen.reduce((a, z) =&gt; a + z, 0);
+}
+summe(1, 2, 3);     // 6
+
+const arr = [1, 2, 3];
+Math.max(...arr);   // Spread: Array als einzelne Argumente</code></pre>
+</article>
+
+<article class="e" data-k="scope gültigkeitsbereich global lokal block hoisting closure iife">
+<h4>Scope, Hoisting, Closure</h4>
+<pre><code class="js">let global = "überall";
+function f() {
+  let lokal = "nur hier";          // ausserhalb von f nicht sichtbar
+  if (true) {
+    let imBlock = 1;               // let/const gelten nur im { }-Block
+    var imBlockVar = 2;            // var ignoriert Blöcke (Falle)
+  }
+  console.log(global, lokal, imBlockVar);
+}
+
+hallo();                           // funktioniert: Funktions-DEKLARATIONEN werden "gehoistet"
+function hallo() {}
+// console.log(x); let x = 1;      // ReferenceError: let/const sind vor der Zeile nicht nutzbar
+
+// Closure: innere Funktion "merkt" sich die Variablen der äusseren
+function zaehler() {
+  let count = 0;
+  return () =&gt; ++count;
+}
+const c = zaehler();
+c(); c();                          // 1, 2</code></pre>
+</article>
+
+<article class="e" data-k="callback funktion als argument höhere ordnung higher order funktion übergeben">
+<h4>Callbacks (Funktion als Argument)</h4>
+<p class="w"><b>Wann:</b> Eine Funktion soll «später» oder «für jedes Element» eine andere Funktion aufrufen.</p>
+<pre><code class="js">function fuehreAus(callback) {
+  callback("Welt");
+}
+fuehreAus(name =&gt; console.log("Hallo " + name));
+
+// Bekannte Callback-Stellen
+button.addEventListener("click", () =&gt; { /* … */ });   // Event
+setTimeout(() =&gt; { /* … */ }, 1000);                    // Timer
+[1, 2, 3].forEach(z =&gt; console.log(z));                 // Array-Methoden
+
+// Achtung Referenz vs. Aufruf
+button.onclick = meineFunktion;     // ✔ Funktion übergeben
+button.onclick = meineFunktion();   // ✘ ruft sofort auf, übergibt das Ergebnis</code></pre>
+</article>
+
+</div>
+</section>
+
+<section id="arrays" data-title="Arrays">
+<h2>Arrays (Listen)</h2>
+<p class="intro">Geordnete Sammlung von Werten; Index beginnt bei <b>0</b>.</p>
+<div class="grid">
+
+<article class="e" data-k="array erstellen zugriff index length liste elemente">
+<h4>Array erstellen &amp; darauf zugreifen</h4>
+<pre><code class="js">const arr = ["a", "b", "c"];
+arr[0];             // "a"   (erstes)
+arr[arr.length-1];  // "c"   (letztes) – oder arr.at(-1)
+arr.length;         // 3
+arr[1] = "X";       // Element ändern
+arr[10];            // undefined (gibt es nicht)
+
+const leer = [];
+const gemischt = [1, "a", true, [1, 2], { x: 1 }];
+const matrix = [[1, 2], [3, 4]];
+matrix[1][0];       // 3 (Zeile 1, Spalte 0)
+
+Array.isArray(arr); // true
+Array.from({length: 3}, (_, i) =&gt; i);   // [0,1,2]
+new Array(3).fill(0);                    // [0,0,0]</code></pre>
+</article>
+
+<article class="e" data-k="push pop shift unshift hinzufügen entfernen anfang ende array ändern">
+<h4>Hinzufügen &amp; Entfernen: <code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code></h4>
+<p class="w"><b>Wann:</b> Liste verändern. Diese Methoden ändern das Array <b>direkt</b>.</p>
+<pre><code class="js">const a = [1, 2, 3];
+a.push(4);        // hinten anfügen → [1,2,3,4]   (gibt neue Länge zurück)
+a.pop();          // hinten entfernen → gibt 4 zurück
+a.unshift(0);     // vorne anfügen → [0,1,2,3]
+a.shift();        // vorne entfernen → gibt 0 zurück
+
+numbers.push(Number(userInput));   // aus sum-num</code></pre>
+</article>
+
+<article class="e" data-k="slice splice ausschneiden teil array entfernen einfügen kopieren">
+<h4><code>slice</code> (kopieren) vs. <code>splice</code> (ändern)</h4>
+<pre><code class="js">const a = [10, 20, 30, 40, 50];
+
+a.slice(1, 3);      // [20,30]   Kopie von Index 1 bis vor 3; a bleibt unverändert
+a.slice(2);         // [30,40,50]
+a.slice(-2);        // [40,50]
+a.slice();          // komplette Kopie
+numbers.slice(1);   // alles ausser dem ersten (aus sum-num)
+
+a.splice(1, 2);         // ab Index 1 zwei Elemente LÖSCHEN → a = [10,40,50]
+a.splice(1, 0, "x");    // ab Index 1 nichts löschen, "x" EINFÜGEN
+a.splice(0, 1, "neu");  // Element ersetzen</code></pre>
+</article>
+
+<article class="e" data-k="suchen indexof includes find findindex array element vorhanden">
+<h4>Suchen: <code>indexOf</code>, <code>includes</code>, <code>find</code>, <code>findIndex</code></h4>
+<pre><code class="js">const z = [5, 12, 8, 130];
+z.indexOf(8);            // 2   (-1 wenn nicht gefunden)
+z.includes(8);           // true
+z.find(n =&gt; n &gt; 10);     // 12    erstes passendes ELEMENT (oder undefined)
+z.findIndex(n =&gt; n &gt; 10);// 1     erster passender INDEX (oder -1)
+z.findLast(n =&gt; n &gt; 10); // 130
+
+// Objekt in Array suchen (Spoofify)
+const album = albumCovers.find(a =&gt; a.id === albumId);</code></pre>
+</article>
+
+<article class="e" data-k="map filter reduce transformieren filtern summe array methoden funktional">
+<h4><code>map</code>, <code>filter</code>, <code>reduce</code></h4>
+<p class="w"><b>Wann:</b> <code>map</code> = jedes Element umwandeln; <code>filter</code> = nur passende behalten; <code>reduce</code> = alles zu einem Wert zusammenfassen. Alle liefern ein <b>neues</b> Ergebnis, das Original bleibt.</p>
+<pre><code class="js">const z = [1, 2, 3, 4];
+z.map(n =&gt; n * 2);                 // [2,4,6,8]
+z.filter(n =&gt; n % 2 === 0);        // [2,4]
+z.reduce((summe, n) =&gt; summe + n, 0);  // 10  (0 = Startwert)
+
+// Durchschnitt
+const schnitt = z.reduce((s, n) =&gt; s + n, 0) / z.length;
+
+// Namen aus Objekt-Array
+personen.map(p =&gt; p.name);
+
+// Verketten
+z.filter(n =&gt; n &gt; 1).map(n =&gt; n * 10);   // [20,30,40]</code></pre>
+</article>
+
+<article class="e" data-k="foreach array durchlaufen each callback index">
+<h4><code>forEach</code></h4>
+<p class="w"><b>Wann:</b> Etwas für jedes Element tun (kein Ergebnis-Array). Kein <code>break</code> möglich.</p>
+<pre><code class="js">[1, 2, 3].forEach((wert, index, array) =&gt; {
+  console.log(index, wert);
+});
+
+// aus sum-num: alle weiteren Zahlen abziehen
+numbersCalc.forEach(function (num) { result -= num; });
+
+// Spoofify: passendes Album finden
+albumCovers.forEach((element) =&gt; {
+  if (element.id === albumId) { tracks = element.tracklist; }
+});</code></pre>
+</article>
+
+<article class="e" data-k="some every alle mindestens ein array prüfen bedingung">
+<h4><code>some</code> &amp; <code>every</code></h4>
+<pre><code class="js">const z = [3, 8, 12];
+z.some(n =&gt; n &gt; 10);     // true  – mindestens EINES passt
+z.every(n =&gt; n &gt; 1);     // true  – ALLE passen
+z.every(Number.isFinite); // Beispiel mit vorhandener Funktion</code></pre>
+</article>
+
+<article class="e" data-k="sort sortieren reverse umkehren array ordnen aufsteigend absteigend">
+<h4>Sortieren: <code>sort</code> &amp; <code>reverse</code></h4>
+<div class="warn"><code>sort()</code> ohne Vergleichsfunktion sortiert <b>als Text</b>: <code>[10, 9, 1].sort()</code> → <code>[1, 10, 9]</code>. Und es verändert das Original.</div>
+<pre><code class="js">const z = [10, 9, 1, 100];
+z.sort((a, b) =&gt; a - b);   // aufsteigend  [1,9,10,100]
+z.sort((a, b) =&gt; b - a);   // absteigend
+z.reverse();               // Reihenfolge umdrehen (ändert Original)
+
+["b", "a", "c"].sort();                        // Text alphabetisch
+namen.sort((a, b) =&gt; a.localeCompare(b));      // korrekt mit Umlauten
+personen.sort((a, b) =&gt; a.alter - b.alter);    // Objekte nach Feld
+const kopie = [...z].sort((a, b) =&gt; a - b);    // Original behalten</code></pre>
+</article>
+
+<article class="e" data-k="join concat spread zusammenfügen array kopieren verbinden text">
+<h4><code>join</code>, <code>concat</code>, Spread <code>[...]</code></h4>
+<pre><code class="js">["a", "b", "c"].join("-");     // "a-b-c"
+["a", "b"].join("");           // "ab"
+
+const a = [1, 2], b = [3, 4];
+a.concat(b);                   // [1,2,3,4]
+[...a, ...b];                  // [1,2,3,4]  (Spread, modern)
+[...a, 99];                    // [1,2,99]
+const kopie = [...a];          // flache Kopie
+
+const [erstes, zweites, ...rest] = [1, 2, 3, 4];   // Destructuring
+// erstes=1, zweites=2, rest=[3,4]
+let x = 1, y = 2;
+[x, y] = [y, x];               // Werte tauschen
+
+[[1, 2], [3]].flat();          // [1,2,3]</code></pre>
+</article>
+
+<article class="e wide" data-k="array methoden übersicht tabelle cheat">
+<h4>Array-Methoden – Übersicht</h4>
+<table>
+<tr><th>Methode</th><th>Ändert Original?</th><th>Gibt zurück</th><th>Zweck</th></tr>
+<tr><td><code>push / unshift</code></td><td>ja</td><td>neue Länge</td><td>hinten / vorne hinzufügen</td></tr>
+<tr><td><code>pop / shift</code></td><td>ja</td><td>entferntes Element</td><td>hinten / vorne entfernen</td></tr>
+<tr><td><code>splice(i, n, …neu)</code></td><td>ja</td><td>entfernte Elemente</td><td>löschen / einfügen / ersetzen</td></tr>
+<tr><td><code>sort / reverse</code></td><td>ja</td><td>das Array</td><td>sortieren / umdrehen</td></tr>
+<tr><td><code>slice(a, b)</code></td><td>nein</td><td>neues Array</td><td>Teil kopieren</td></tr>
+<tr><td><code>map / filter</code></td><td>nein</td><td>neues Array</td><td>umwandeln / filtern</td></tr>
+<tr><td><code>reduce</code></td><td>nein</td><td>ein Wert</td><td>zusammenfassen</td></tr>
+<tr><td><code>find / findIndex</code></td><td>nein</td><td>Element / Index</td><td>erstes passendes suchen</td></tr>
+<tr><td><code>indexOf / includes</code></td><td>nein</td><td>Index / true,false</td><td>Wert suchen</td></tr>
+<tr><td><code>some / every</code></td><td>nein</td><td>true / false</td><td>mind. eins / alle</td></tr>
+<tr><td><code>forEach</code></td><td>nein</td><td>undefined</td><td>für jedes etwas tun</td></tr>
+<tr><td><code>join / concat / flat</code></td><td>nein</td><td>String / Array</td><td>verbinden</td></tr>
+</table>
+</article>
+
+</div>
+</section>
+
+<section id="objects" data-title="Objekte &amp; JSON">
+<h2>Objekte, JSON &amp; Klassen</h2>
+<p class="intro">Zusammengehörende Daten als <code>schlüssel: wert</code>-Paare – Grundlage z.B. der Album-Liste in Spoofify.</p>
+<div class="grid">
+
+<article class="e" data-k="objekt object literal eigenschaften property zugriff punkt klammern methoden this">
+<h4>Objekte erstellen &amp; nutzen</h4>
+<pre><code class="js">const person = {
+  name: "Arun",
+  alter: 23,
+  hobbys: ["Fussball", "Musik"],
+  adresse: { ort: "Zürich" },
+  gruss() { return "Hi, ich bin " + this.name; }   // Methode (this = das Objekt)
+};
+
+person.name;              // "Arun"      (Punkt-Schreibweise)
+person["alter"];          // 23          (Klammer: Schlüssel als String/Variable)
+const key = "name"; person[key];
+person.adresse.ort;       // "Zürich"    (verschachtelt)
+person.hobbys[0];         // "Fussball"
+person.email = "a@b.ch";  // hinzufügen / ändern
+delete person.alter;      // Eigenschaft löschen
+"name" in person;         // true  (gibt es den Schlüssel?)
+person.adresse?.plz;      // undefined statt Fehler (Optional Chaining)
+person.gruss();           // "Hi, ich bin Arun"</code></pre>
+</article>
+
+<article class="e" data-k="array von objekten datenstruktur spoofify albumcovers tracklist daten liste">
+<h4>Array von Objekten (wie in Spoofify)</h4>
+<p class="w"><b>Wann:</b> Fast alle echten Daten (Produkte, Alben, Todos) sind eine Liste von Objekten.</p>
+<pre><code class="js">const albumCovers = [
+  { id: 1, src: "albumcovers/loungemusic.jpeg", alt: "Lounge", isDisplayed: true,
+    tracklist: ["Boss Green", "Goldrichtig"] },
+  { id: 2, src: "albumcovers/pasha.jpeg", alt: "Pasha", isDisplayed: false,
+    tracklist: [] },
+];
+
+albumCovers[0].tracklist[1];                    // "Goldrichtig"
+albumCovers.length;                             // 2
+albumCovers.filter(a =&gt; a.isDisplayed);         // nur angezeigte
+albumCovers.find(a =&gt; a.id === 2);              // Objekt mit id 2
+albumCovers.map(a =&gt; a.alt);                    // ["Lounge","Pasha"]
+albumCovers.push({ id: 3, src: "x.jpg", alt: "X", isDisplayed: false, tracklist: [] });</code></pre>
+</article>
+
+<article class="e" data-k="object keys values entries assign spread destructuring objekt kopieren durchlaufen">
+<h4><code>Object.keys / values / entries</code>, Spread, Destructuring</h4>
+<pre><code class="js">const o = { a: 1, b: 2 };
+Object.keys(o);        // ["a","b"]
+Object.values(o);      // [1,2]
+Object.entries(o);     // [["a",1],["b",2]]
+for (const [k, v] of Object.entries(o)) { console.log(k, v); }
+
+const kopie   = { ...o };              // flache Kopie
+const erweitert = { ...o, c: 3 };      // {a:1,b:2,c:3}
+const { a, b } = o;                    // Destructuring: a=1, b=2
+const { a: eins } = o;                 // umbenennen
+function zeige({ name, alter }) { }    // Destructuring in Parametern
+
+Object.freeze(o);                      // unveränderbar machen</code></pre>
+</article>
+
+<article class="e" data-k="json parse stringify serialisieren datenformat text objekt umwandeln">
+<h4>JSON: <code>JSON.stringify</code> &amp; <code>JSON.parse</code></h4>
+<p class="w"><b>Wann:</b> Objekte als Text speichern (<code>localStorage</code>) oder über das Netz senden/empfangen (<code>fetch</code>).</p>
+<pre><code class="js">const obj = { name: "Arun", tags: ["a", "b"] };
+const text = JSON.stringify(obj);        // '{"name":"Arun","tags":["a","b"]}'
+JSON.stringify(obj, null, 2);            // schön formatiert (2 Leerzeichen)
+const zurueck = JSON.parse(text);        // wieder ein Objekt
+JSON.parse("kein json");                 // SyntaxError → mit try/catch absichern
+
+// Tiefe Kopie (einfacher Trick)
+const tief = JSON.parse(JSON.stringify(obj));
+// oder modern: structuredClone(obj)</code></pre>
+<div class="note">JSON verlangt <code>"doppelte Anführungszeichen"</code> bei Schlüsseln und Strings; keine Kommentare, keine Funktionen, kein <code>undefined</code>.</div>
+</article>
+
+<article class="e" data-k="referenz kopie primitive objekt vergleich gleich kopieren shallow deep">
+<h4>Referenz vs. Kopie</h4>
+<pre><code class="js">const a = [1, 2];
+const b = a;          // KEINE Kopie – beide zeigen auf dasselbe Array
+b.push(3);            // a ist jetzt auch [1,2,3]
+
+const c = [...a];     // echte (flache) Kopie
+[1] === [1];          // false! Objekte/Arrays werden per Referenz verglichen
+JSON.stringify(x) === JSON.stringify(y);   // einfacher Inhaltsvergleich</code></pre>
+</article>
+
+<article class="e" data-k="klasse class constructor extends new oop objektorientiert methode static">
+<h4>Klassen (kurz)</h4>
+<p class="w"><b>Wann:</b> Mehrere gleichartige Objekte mit gemeinsamen Methoden erzeugen.</p>
+<pre><code class="js">class Tier {
+  constructor(name) { this.name = name; }        // wird bei new aufgerufen
+  sprich() { return `${this.name} macht ein Geräusch`; }
+  static info() { return "Ich bin eine Klasse"; }
+}
+class Hund extends Tier {                        // Vererbung
+  sprich() { return `${this.name} bellt`; }
+}
+const h = new Hund("Rex");
+h.sprich();          // "Rex bellt"
+h instanceof Tier;   // true</code></pre>
+</article>
+
+</div>
+</section>
+<section id="dom" data-title="DOM">
+<h2>DOM: Elemente finden &amp; verändern</h2>
+<p class="intro">Das <b>Document Object Model</b> ist der Baum aller HTML-Elemente. Mit JS lassen sich Elemente suchen, ändern, erzeugen und löschen.</p>
+<div class="grid">
+
+<article class="e" data-k="dom auswählen selektieren finden queryselector queryselectorall getelementbyid getelementsbyclassname css selektor element holen">
+<h4>Elemente finden: <code>querySelector</code> &amp; Co.</h4>
+<p class="w"><b>Wann:</b> Immer bevor du etwas an einem Element änderst. <code>querySelector</code> = <b>erstes</b> Element (oder <code>null</code>), <code>querySelectorAll</code> = <b>alle</b> (NodeList, ggf. leer).</p>
+<pre><code class="js">document.querySelector("h1");            // Tag
+document.querySelector("#titel");        // ID          (#)
+document.querySelector(".sale");         // erste Klasse (.)
+document.querySelector("ul li");         // li irgendwo in ul
+document.querySelector("ul &gt; li");       // li direkt in ul
+document.querySelector("li.sale");       // li MIT Klasse sale
+document.querySelector("input[type='text']");   // Attribut
+document.querySelector("li:nth-child(2)");      // 2. li
+document.querySelector("li:first-child");
+
+document.querySelectorAll(".games");     // ALLE mit Klasse (NodeList)
+document.querySelectorAll(".games")[1];  // 2. Element der Liste (Index ab 0)
+document.querySelectorAll(".games")[1].querySelectorAll("li")[1]; // in Element weitersuchen
+box.querySelector("p");                  // Suche nur INNERHALB von box
+
+document.getElementById("titel");        // ohne # – älter, aber schnell
+document.getElementsByClassName("sale"); // live HTMLCollection
+document.getElementsByTagName("li");
+
+document.body; document.documentElement; document.title;</code></pre>
+<div class="warn"><code>document.querySelector(".games" [0])</code> ist ein Syntaxfehler-Klassiker: die <code>[0]</code> gehört <b>hinter die Klammer</b>: <code>document.querySelectorAll(".games")[0]</code>.</div>
+</article>
+
+<article class="e wide" data-k="selektoren kompendium css selector pseudo klasse first-child last-child nth-child last-of-type first-of-type not is has attribut kombinator geschwister nachbar + ~ > ^= $= *= even odd">
+<h4>CSS-Selektoren komplett (gelten für <code>querySelector(All)</code> und CSS)</h4>
+<table>
+<tr><th>Selektor</th><th>Wählt aus</th></tr>
+<tr><td><code>p</code> · <code>#id</code> · <code>.klasse</code> · <code>*</code></td><td>Tag · ID · Klasse · alles</td></tr>
+<tr><td><code>li.rot</code> · <code>.rot.gruen</code></td><td>li MIT Klasse rot · Element mit beiden Klassen (kein Leerzeichen!)</td></tr>
+<tr><td><code>A B</code> · <code>A &gt; B</code></td><td>B irgendwo in A · B direktes Kind von A</td></tr>
+<tr><td><code>A + B</code> · <code>A ~ B</code></td><td>B direkt nach A · B irgendwo nach A (gleiche Ebene)</td></tr>
+<tr><td><code>A, B</code></td><td>A <b>oder</b> B</td></tr>
+<tr><td><code>li:first-child</code> · <code>li:last-child</code></td><td>li, das das erste / letzte <b>Kind</b> seines Elternelements ist</td></tr>
+<tr><td><code>li:nth-child(2)</code> · <code>(odd)</code> · <code>(even)</code> · <code>(3n)</code></td><td>2. Kind · ungerade · gerade · jedes 3.</td></tr>
+<tr><td><code>ul:first-of-type</code> · <code>ul:last-of-type</code> · <code>:nth-of-type(n)</code></td><td>erstes / letztes / n-tes Element <b>seines Tags</b> unter Geschwistern</td></tr>
+<tr><td><code>li:not(.rot)</code> · <code>li:not([class])</code></td><td>li, das <b>nicht</b> passt · li ohne class-Attribut</td></tr>
+<tr><td><code>li:not(.a):not(.b)</code> · <code>li:not(.a, .b)</code></td><td>weder a noch b</td></tr>
+<tr><td><code>[class]</code> · <code>[type="text"]</code> · <code>[href^="http"]</code> · <code>[src$=".png"]</code> · <code>[alt*="Cover"]</code></td><td>Attribut vorhanden · Wert genau · beginnt mit · endet mit · enthält</td></tr>
+<tr><td><code>input:checked</code> · <code>:disabled</code> · <code>:focus</code> · <code>a:hover</code> · <code>:empty</code></td><td>Zustände</td></tr>
+<tr><td><code>li:has(a)</code> · <code>:is(h1, h2)</code></td><td>li das ein a enthält · h1 oder h2 (modern)</td></tr>
+</table>
+<pre><code class="js">document.querySelectorAll("ul li:first-child");          // erstes li JEDER Liste
+document.querySelector("ul:last-of-type");               // letzte Liste
+document.querySelectorAll("li:not([class])");            // li ohne class
+document.querySelectorAll("#sommer + ul li");            // alle li des ul direkt nach #sommer
+document.querySelectorAll("ul.games &gt; li.sale");         // nur direkte Kinder mit Klasse sale
+document.querySelectorAll("input[type='checkbox']:checked");   // angehakte Checkboxen</code></pre>
+</article>
+
+<article class="e wide" data-k="was gibt es nicht falsche methoden erfunden fallen namen tippfehler verwechslung getelementbyclassname addclass addchild removeall foreach map htmlcollection nodelist prüfung falsch">
+<h4>Was gibt es NICHT? (erfundene / falsche Namen in Prüfungsantworten)</h4>
+<table>
+<tr><th>✘ Falsch / gibt es nicht</th><th>✔ Richtig</th></tr>
+<tr><td><code>getElementByClassName</code></td><td><code>getElementsByClassName</code> (Mehrzahl, ohne Punkt) oder <code>querySelectorAll('.klasse')</code></td></tr>
+<tr><td><code>getElementsById</code> · <code>getElementById('#x')</code></td><td><code>getElementById('x')</code> (Einzahl, <b>ohne</b> #)</td></tr>
+<tr><td><code>getElementByTagName</code></td><td><code>getElementsByTagName</code></td></tr>
+<tr><td><code>querySelectorAll('rot')</code></td><td><code>querySelectorAll('.rot')</code> – Punkt für Klasse, # für ID</td></tr>
+<tr><td><code>nodeList.get(1)</code></td><td><code>nodeList[1]</code> oder <code>nodeList.item(1)</code></td></tr>
+<tr><td><code>parent.addChild(el)</code> · <code>createChild</code> · <code>insertChild</code></td><td><code>parent.appendChild(el)</code> · <code>append</code> · <code>insertBefore</code></td></tr>
+<tr><td><code>el.addClass('x')</code> · <code>classList.addAll('x')</code></td><td><code>el.classList.add('x')</code> (mehrere: <code>add('a','b')</code>)</td></tr>
+<tr><td><code>el.classlist</code> · <code>el.innerHtml</code> · <code>el.innertext</code></td><td><code>classList</code> · <code>innerHTML</code> · <code>innerText</code> (Gross-/Kleinschreibung!)</td></tr>
+<tr><td><code>liste.delete()</code> · <code>removeAll()</code> · <code>document.removeAllWith…</code></td><td><code>liste.forEach(el =&gt; el.remove())</code></td></tr>
+<tr><td><code>getElementsByClassName(…).forEach(…)</code></td><td>HTMLCollection hat <b>kein forEach</b> → <code>for…of</code> oder <code>Array.from(…).forEach</code> (NodeList hat forEach)</td></tr>
+<tr><td><code>nodeList.map(…)</code> / <code>.filter</code></td><td><code>Array.from(nodeList).map(…)</code></td></tr>
+<tr><td><code>el.style.background-color</code></td><td><code>el.style.backgroundColor</code> (camelCase)</td></tr>
+<tr><td><code>addEventListener("onclick", f)</code></td><td><code>addEventListener("click", f)</code> (ohne «on»)</td></tr>
+<tr><td><code>array.length()</code> · <code>array.push[3]</code></td><td><code>array.length</code> (Property) · <code>array.push(3)</code></td></tr>
+<tr><td><code>for (let x in liste)</code> für Elemente</td><td><code>for (const x of liste)</code> (<code>in</code> = Indizes/Schlüssel)</td></tr>
+<tr><td><code>el.nextSibling</code> für «nächstes Element»</td><td><code>el.nextElementSibling</code> (nextSibling kann ein Text-Knoten sein)</td></tr>
+<tr><td><code>&lt;script src="x.js" defer /&gt;</code> · <code>&lt;link rel="javascript"&gt;</code></td><td><code>&lt;script src="x.js" defer&gt;&lt;/script&gt;</code></td></tr>
+<tr><td><code>if (a = 5)</code> · <code>if (a == "5")</code></td><td><code>if (a === 5)</code> (Vergleich!) – ein <code>=</code> ist Zuweisung</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="nodelist htmlcollection array from spread foreach map filter length mehrere elemente durchlaufen live statisch unterschied getelementsbyclassname querySelectorAll">
+<h4>NodeList durchlaufen &amp; umwandeln</h4>
+<pre><code class="js">const items = document.querySelectorAll("li");
+items.length;                         // Anzahl
+items[0];                             // erstes
+items.forEach(li =&gt; li.style.color = "red");   // forEach geht direkt
+for (const li of items) { }           // for…of geht auch
+
+// map/filter/… gibt es NICHT auf NodeList → erst umwandeln:
+Array.from(items).map(li =&gt; li.textContent);
+[...items].filter(li =&gt; li.classList.contains("sale"));
+
+// Leeres Ergebnis prüfen
+const el = document.querySelector(".gibtsnicht");
+if (el) { /* existiert */ }           // null ist falsy</code></pre>
+<div class="note"><code>querySelectorAll</code> ist eine <b>Momentaufnahme</b> (<b>NodeList</b>, statisch) – neu hinzugefügte Elemente tauchen darin nicht auf; nochmals abfragen (siehe <code>coverCount</code> in Spoofify).</div>
+<table>
+<tr><th></th><th>querySelectorAll</th><th>getElementsByClassName / TagName, <code>children</code></th></tr>
+<tr><td>Typ</td><td>NodeList</td><td>HTMLCollection</td></tr>
+<tr><td>Aktualisiert sich?</td><td>nein (statisch)</td><td><b>ja (live)</b></td></tr>
+<tr><td><code>forEach</code></td><td>✔</td><td>✘ (→ <code>for…of</code> / <code>Array.from</code>)</td></tr>
+<tr><td><code>for…of</code>, <code>[i]</code>, <code>.length</code></td><td>✔</td><td>✔</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="text inhalt ändern innertext textcontent innerhtml value inhalt lesen setzen">
+<h4>Inhalt lesen &amp; ändern: <code>textContent</code>, <code>innerText</code>, <code>innerHTML</code></h4>
+<pre><code class="js">const h = document.querySelector("h1");
+
+h.textContent;                 // Text lesen (immer String)
+h.textContent = "Neuer Titel"; // Text setzen – HTML wird NICHT interpretiert (sicher)
+h.innerText = "Arun";          // ähnlich; berücksichtigt CSS (versteckter Text fehlt) – etwas langsamer
+h.innerHTML = "&lt;b&gt;Fett&lt;/b&gt;";   // HTML wird interpretiert
+h.innerHTML = "";              // Inhalt komplett leeren
+
+// Zähler erhöhen (dom3.1) – Text ist String → in Zahl umwandeln!
+const zahl = parseInt(document.querySelector("#countOne").innerText);
+document.querySelector("#countOne").innerText = zahl + 1;</code></pre>
+<ul>
+<li><b>Meistens <code>textContent</code></b> nehmen. <code>innerHTML</code> nur für eigenes, vertrauenswürdiges HTML.</li>
+<li><code>innerHTML</code> mit Benutzereingaben = Sicherheitsrisiko (XSS: fremder Code wird eingeschleust).</li>
+<li>Bei <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code> heisst es <code>.value</code> (nicht textContent).</li>
+</ul>
+</article>
+
+<article class="e" data-k="attribut setattribute getattribute removeattribute src href alt id dataset data-attribut hasattribute">
+<h4>Attribute: <code>setAttribute</code>, <code>dataset</code>, direkte Properties</h4>
+<pre><code class="js">const img = document.querySelector("img");
+
+img.getAttribute("src");            // Wert lesen
+img.setAttribute("src", "a.png");   // setzen
+img.setAttribute("width", 200);
+img.hasAttribute("alt");            // true/false
+img.removeAttribute("alt");
+
+// Viele Attribute gehen auch direkt als Property
+img.src = "b.png"; img.alt = "Beschreibung"; img.id = "bild1";
+link.href = "https://…";  input.value = "Text";  input.placeholder = "…";
+input.disabled = true;    checkbox.checked = true;  el.hidden = true;
+
+// data-Attribute: &lt;img data-id="3" data-album-name="X"&gt;
+img.dataset.id;                     // "3"  (immer String!)
+img.dataset.albumName;              // "X"  (data-album-name → camelCase)
+img.dataset.id = 5;
+img.getAttribute("data-id");        // "3"  (wie in Spoofify)
+parseInt(img.getAttribute("data-id"), 10);   // → Zahl</code></pre>
+</article>
+
+<article class="e" data-k="klasse classlist add remove toggle contains replace css klasse ändern class">
+<h4>CSS-Klassen: <code>classList</code></h4>
+<p class="w"><b>Wann:</b> Aussehen ändern – besser als einzelne Styles, weil das Design in der CSS-Datei bleibt.</p>
+<pre><code class="js">el.classList.add("large");            // hinzufügen (aus dom2.3)
+el.classList.add("a", "b");           // mehrere
+el.classList.remove("large");
+el.classList.toggle("aktiv");         // an/aus umschalten
+el.classList.toggle("aktiv", istWahr);// erzwingen: true = an, false = aus
+el.classList.contains("aktiv");       // true/false
+el.classList.replace("alt", "neu");
+el.className;                         // alle Klassen als String (überschreibt beim Setzen alles)</code></pre>
+</article>
+
+<article class="e" data-k="style css inline farbe hintergrund camelcase display none verstecken anzeigen getcomputedstyle">
+<h4>Styles direkt setzen: <code>el.style</code></h4>
+<pre><code class="js">document.body.style.backgroundColor = "lightblue";  // background-color → backgroundColor (camelCase)
+el.style.color = "red";
+el.style.fontSize = "20px";              // Einheit nicht vergessen!
+el.style.width = "200px";
+el.style.display = "none";               // verstecken
+el.style.display = "block";              // wieder zeigen ("" = zurück zum CSS-Wert)
+el.style.visibility = "hidden";          // unsichtbar, Platz bleibt
+el.style.cssText = "color:red; margin:0";
+el.style.removeProperty("color");
+
+// Position (aus dom3.1: Ball folgt Klick)
+ball.style.position = "absolute";
+ball.style.left = x + "px";
+ball.style.top  = y + "px";
+
+getComputedStyle(el).color;              // tatsächlich angewandter Wert (nur lesen)</code></pre>
+<div class="note">Mit <code>el.style</code> liest man nur, was per JS oder <code>style=""</code> gesetzt wurde – nicht CSS aus der Datei (dafür <code>getComputedStyle</code>).</div>
+</article>
+
+<article class="e" data-k="createelement appendchild append prepend remove removechild insertbefore erzeugen hinzufügen entfernen element neu dynamisch">
+<h4>Elemente erzeugen, einfügen, entfernen</h4>
+<p class="w"><b>Wann:</b> Listen, Karten, Bilder dynamisch aufbauen (Spoofify: neue Album-Covers).</p>
+<pre><code class="js">// 1) Erzeugen (existiert noch nicht auf der Seite!)
+const li = document.createElement("li");
+li.textContent = "Drittes Element";
+li.classList.add("item");
+li.setAttribute("data-id", 3);
+
+// 2) Einfügen
+const ul = document.querySelector("ul");
+ul.appendChild(li);            // ans Ende
+ul.append(li, "Text");         // ans Ende, mehrere / auch Strings
+ul.prepend(li);                // an den Anfang
+ul.insertBefore(li, ul.children[1]);   // vor bestimmtes Element
+refEl.before(li);  refEl.after(li);    // vor / nach einem Element
+ul.insertAdjacentHTML("beforeend", "&lt;li&gt;Neu&lt;/li&gt;");   // HTML-String einfügen
+
+// 3) Entfernen
+li.remove();                       // sich selbst entfernen
+ul.removeChild(ul.children[1]);    // Kind entfernen (aus dom2.3)
+ul.replaceChildren();              // ALLE Kinder entfernen
+ul.innerHTML = "";                 // ebenfalls alle entfernen
+while (ul.firstChild) ul.removeChild(ul.firstChild);   // klassische Variante (Spoofify)
+
+// 4) Kopieren / Ersetzen
+const kopie = li.cloneNode(true);  // true = inkl. Kinder
+old.replaceWith(li);</code></pre>
+<pre><code class="js">// Komplettes Beispiel: Bild einfügen (dom2.3 / Spoofify)
+const img = document.createElement("img");
+img.src = "albumcovers/loungemusic.jpeg";
+img.alt = "Cover";
+img.style.width = "200px";
+document.querySelector("h1").appendChild(img);</code></pre>
+<div class="tip">Ein Element existiert nur <b>einmal</b> im DOM: <code>appendChild</code> eines schon eingefügten Elements <em>verschiebt</em> es. Für mehrere Kopien immer <code>createElement</code> bzw. <code>cloneNode</code>.</div>
+</article>
+
+<article class="e" data-k="navigation parent children firstchild nextsibling closest eltern kind geschwister dom baum durchlaufen">
+<h4>Im Baum navigieren</h4>
+<pre><code class="js">el.parentElement;            // Eltern
+el.children;                 // nur Element-Kinder (HTMLCollection)
+el.children[1];              // 2. Kind (aus dom2.3)
+el.children.length;
+el.firstElementChild;  el.lastElementChild;
+el.nextElementSibling; el.previousElementSibling;
+el.childNodes;               // inkl. Text-Knoten (Zeilenumbrüche!) – meist NICHT gewünscht
+el.closest(".karte");        // nächstes Elternelement (oder sich selbst) mit Selektor
+el.matches(".aktiv");        // passt el zum Selektor? (true/false)
+el.contains(anderes);
+el.tagName;                  // "LI" (immer GROSSBUCHSTABEN) – aus Spoofify: event.target.tagName === "IMG"</code></pre>
+</article>
+
+<article class="e" data-k="position grösse getboundingclientrect offsetwidth scroll scrollintoview koordinaten focus">
+<h4>Grösse, Position, Scroll, Fokus</h4>
+<pre><code class="js">const r = el.getBoundingClientRect();
+r.left; r.top; r.width; r.height;   // relativ zum sichtbaren Fenster
+el.offsetWidth; el.offsetHeight;    // Grösse in px
+img.width;                          // bei &lt;img&gt;: Breite
+
+window.innerWidth; window.innerHeight;   // Fenstergrösse
+window.scrollY;                          // wie weit gescrollt
+el.scrollIntoView({ behavior: "smooth" });
+window.scrollTo(0, 0);
+
+input.focus();  input.blur();       // Fokus setzen / entfernen
+input.select();                     // Text markieren</code></pre>
+<pre><code class="js">// Klickposition relativ zu einem Element (dom3.1)
+div.onclick = (event) =&gt; {
+  const rect = div.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  ball.style.left = x - ball.width  / 2 + "px";   // Ball-Mitte auf Klick
+  ball.style.top  = y - ball.height / 2 + "px";
+};</code></pre>
+</article>
+
+<article class="e" data-k="window location history navigator reload url weiterleiten seite neu laden localstorage fenster">
+<h4><code>window</code>, <code>location</code>, <code>history</code></h4>
+<pre><code class="js">location.href;                     // aktuelle URL
+location.href = "https://example.com";   // weiterleiten
+location.reload();                 // Seite neu laden
+location.search;                   // "?a=1&amp;b=2"
+new URLSearchParams(location.search).get("a");   // "1"
+history.back();
+window.open("https://…", "_blank");
+navigator.language;                // "de-CH"
+window.innerWidth;
+document.title = "Neuer Titel";</code></pre>
+</article>
+
+</div>
+</section>
+
+<section id="events" data-title="Events">
+<h2>Events (Ereignisse)</h2>
+<p class="intro">Code reagiert auf Aktionen des Benutzers oder des Browsers.</p>
+<div class="grid">
+
+<article class="e" data-k="event addeventlistener onclick klick reagieren handler listener registrieren click">
+<h4><code>addEventListener</code> vs. <code>onclick</code></h4>
+<p class="w"><b>Wann:</b> <code>addEventListener</code> ist der Standard; <code>onclick =</code> geht für einfache Übungen, kann aber pro Element nur <b>einen</b> Handler halten (der nächste überschreibt).</p>
+<pre><code class="js">const btn = document.querySelector("#btn");
+
+// 1) Empfohlen: mehrere Listener möglich
+btn.addEventListener("click", () =&gt; {
+  alert("Geklickt");
+});
+
+// 2) Property (überschreibt frühere onclick-Handler; so in hello-world / dom3.1 / Spoofify verwendet)
+btn.onclick = () =&gt; { alert("Hi"); };
+
+// 3) Benannte Funktion (nötig zum späteren Entfernen)
+function beiKlick(event) { console.log(event.target); }
+btn.addEventListener("click", beiKlick);
+btn.removeEventListener("click", beiKlick);
+
+// Optionen
+btn.addEventListener("click", beiKlick, { once: true });   // nur einmal ausführen</code></pre>
+<div class="warn">Funktion <b>übergeben</b>, nicht aufrufen: <code>addEventListener("click", f)</code> ✔ – <code>addEventListener("click", f())</code> ✘ (läuft sofort).</div>
+</article>
+
+<article class="e" data-k="events liste click dblclick input change submit keydown keyup mouseover mouseenter mouseleave mousemove focus blur load scroll resize contextmenu arten">
+<h4>Wichtige Event-Typen</h4>
+<table>
+<tr><th>Event</th><th>Wann er auslöst</th></tr>
+<tr><td><code>click</code> / <code>dblclick</code></td><td>Klick / Doppelklick</td></tr>
+<tr><td><code>contextmenu</code></td><td>Rechtsklick</td></tr>
+<tr><td><code>mouseover / mouseout</code></td><td>Maus kommt auf / verlässt Element (auch Kinder)</td></tr>
+<tr><td><code>mouseenter / mouseleave</code></td><td>wie oben, aber ohne Kinder (meist besser)</td></tr>
+<tr><td><code>mousemove</code></td><td>Maus bewegt sich (<code>clientX/Y</code>)</td></tr>
+<tr><td><code>keydown / keyup</code></td><td>Taste gedrückt / losgelassen (<code>event.key</code>)</td></tr>
+<tr><td><code>input</code></td><td>bei <b>jeder</b> Änderung im Eingabefeld (live)</td></tr>
+<tr><td><code>change</code></td><td>Wert fertig geändert (Fokus verlassen / Select / Checkbox)</td></tr>
+<tr><td><code>submit</code></td><td>Formular abgeschickt (auf dem <code>&lt;form&gt;</code>)</td></tr>
+<tr><td><code>focus / blur</code></td><td>Feld erhält / verliert Fokus</td></tr>
+<tr><td><code>DOMContentLoaded</code></td><td>HTML ist gebaut (Bilder evtl. noch nicht)</td></tr>
+<tr><td><code>load</code></td><td>alles inkl. Bilder geladen (<code>window</code>, <code>img</code>)</td></tr>
+<tr><td><code>scroll</code> / <code>resize</code></td><td>Scrollen / Fenstergrösse ändert sich</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="event objekt target currenttarget key clientx preventdefault stopPropagation parameter e evt">
+<h4>Das Event-Objekt</h4>
+<p class="w"><b>Wann:</b> Du willst wissen, <em>was</em> angeklickt wurde, welche Taste gedrückt wurde oder das Standardverhalten verhindern.</p>
+<pre><code class="js">el.addEventListener("click", (event) =&gt; {   // Parameter heisst meist event oder e
+  event.target;          // das Element, das TATSÄCHLICH geklickt wurde (kann ein Kind sein)
+  event.currentTarget;   // das Element, an dem der Listener hängt
+  event.type;            // "click"
+  event.clientX; event.clientY;   // Mausposition im Fenster
+  event.preventDefault();         // Standardverhalten stoppen (Link folgen, Formular senden)
+  event.stopPropagation();        // Bubbling stoppen
+});
+
+document.addEventListener("keydown", (e) =&gt; {
+  e.key;        // "Enter", "Escape", "a", " ", "ArrowUp", "ArrowDown"
+  e.ctrlKey; e.shiftKey; e.altKey;
+  if (e.key === "Enter") { /* … */ }
+});
+
+input.addEventListener("input", (e) =&gt; {
+  e.target.value;   // aktueller Text im Feld
+});</code></pre>
+<div class="note">In <code>dom3.1</code> wurde <code>event</code> ohne Parameter benutzt (<code>window.event</code>, veraltet). Sauber: <code>(event) =&gt; { … }</code>.</div>
+</article>
+
+<article class="e wide" data-k="event delegation bubbling delegieren dynamische elemente target tagname closest matches spoofify">
+<h4>Bubbling &amp; Event-Delegation (aus Spoofify)</h4>
+<p class="w"><b>Wann:</b> Elemente werden <b>erst später</b> per JS erzeugt (oder es sind sehr viele) → ein einziger Listener am <b>Elternelement</b> statt einem pro Kind. Ein Klick «sprudelt» (bubbles) vom geklickten Element nach oben durch alle Eltern.</p>
+<pre><code class="js">// Ein Listener am Grid – funktioniert auch für Bilder, die erst später hinzugefügt werden
+document.querySelector("#latest-realeses-grid").addEventListener("click", (event) =&gt; {
+  if (event.target.tagName === "IMG") {                        // wurde ein Bild geklickt?
+    const albumId = parseInt(event.target.getAttribute("data-id"), 10);
+    // … Album suchen, Tracks anzeigen
+  }
+});
+
+// Allgemeiner mit closest/matches
+liste.addEventListener("click", (e) =&gt; {
+  const li = e.target.closest("li");         // klickte man ein Kind vom li → trotzdem das li finden
+  if (!li || !liste.contains(li)) return;    // Klick ausserhalb eines li ignorieren
+  li.remove();
+});
+btnBereich.addEventListener("click", (e) =&gt; {
+  if (e.target.matches("button.loeschen")) { /* … */ }
+});</code></pre>
+<div class="tip">Ein Listener direkt an <code>querySelectorAll("img")</code>-Elemente erwischt <b>nur die schon vorhandenen</b>. Neue Elemente bräuchten einen eigenen Listener → Delegation löst das.</div>
+</article>
+
+<article class="e" data-k="domcontentloaded load ready seite geladen warten start initialisieren defer">
+<h4><code>DOMContentLoaded</code> vs. <code>load</code></h4>
+<pre><code class="js">document.addEventListener("DOMContentLoaded", () =&gt; {
+  // HTML ist fertig geparst → Elemente können abgefragt werden (Standard in allen Übungen)
+});
+
+window.addEventListener("load", () =&gt; {
+  // zusätzlich alle Bilder/Styles geladen (z.B. wenn Bildgrösse gebraucht wird)
+});</code></pre>
+<p>Kein Warten nötig bei: <code>&lt;script src="x.js" defer&gt;&lt;/script&gt;</code> (<b>beste, moderne Variante</b>), <code>type="module"</code>, oder Script ganz unten im <code>&lt;body&gt;</code>. Nicht selbstschliessend schreiben (<code>&lt;script … /&gt;</code> ist ungültig).</p>
+</article>
+
+<article class="e" data-k="formular form input value submit validierung checkbox radio select textarea eingabe feld lesen">
+<h4>Formulare &amp; Eingaben lesen</h4>
+<pre><code class="html">&lt;form id="f"&gt;
+  &lt;input id="name"&gt;
+  &lt;input id="alter" type="number"&gt;
+  &lt;input id="agb" type="checkbox"&gt;
+  &lt;select id="land"&gt;&lt;option value="ch"&gt;Schweiz&lt;/option&gt;&lt;/select&gt;
+  &lt;button&gt;Senden&lt;/button&gt;    &lt;!-- Button in form = submit --&gt;
+&lt;/form&gt;</code></pre>
+<pre><code class="js">const form = document.querySelector("#f");
+form.addEventListener("submit", (e) =&gt; {
+  e.preventDefault();                          // sonst lädt die Seite neu!
+
+  const name  = document.querySelector("#name").value.trim();   // immer String
+  const alter = Number(document.querySelector("#alter").value); // in Zahl umwandeln
+  const agb   = document.querySelector("#agb").checked;          // true/false
+  const land  = document.querySelector("#land").value;           // value der gewählten option
+  const radio = document.querySelector("input[name='geschlecht']:checked")?.value;
+
+  if (name === "" || isNaN(alter)) {
+    alert("Bitte ausfüllen");
+    return;
+  }
+  form.reset();                                 // Felder leeren
+});
+
+input.value = "";                               // einzelnes Feld leeren
+input.addEventListener("input", () =&gt; { /* Live-Suche */ });</code></pre>
+</article>
+
+<article class="e" data-k="tastatur keyboard taste enter escape pfeil keydown shortcut">
+<h4>Tastatur-Ereignisse</h4>
+<pre><code class="js">input.addEventListener("keydown", (e) =&gt; {
+  if (e.key === "Enter") {
+    hinzufuegen();
+  }
+});
+
+document.addEventListener("keydown", (e) =&gt; {
+  if (e.key === "ArrowRight") { /* weiter */ }
+  if (e.key === "Escape")     { /* schliessen */ }
+  if (e.ctrlKey &amp;&amp; e.key === "s") { e.preventDefault(); /* speichern */ }
+});</code></pre>
+</article>
+
+</div>
+</section>
+<section id="advanced" data-title="Timer, Fetch, Storage">
+<h2>Timer, Fehler, Storage, Fetch</h2>
+<p class="intro">Zeitgesteuert, asynchron, gespeichert.</p>
+<div class="grid">
+
+<article class="e" data-k="timer settimeout setinterval cleartimeout clearinterval verzögerung wiederholen uhr animation">
+<h4>Timer: <code>setTimeout</code> &amp; <code>setInterval</code></h4>
+<pre><code class="js">setTimeout(() =&gt; alert("Nach 2 Sekunden"), 2000);   // einmal nach 2000 ms
+
+const id = setInterval(() =&gt; {                      // wiederholt alle 1000 ms
+  console.log(new Date().toLocaleTimeString());
+}, 1000);
+clearInterval(id);                                  // stoppen
+
+const t = setTimeout(f, 5000);
+clearTimeout(t);                                    // abbrechen
+
+// Countdown
+let n = 5;
+const cd = setInterval(() =&gt; {
+  console.log(n--);
+  if (n &lt; 0) clearInterval(cd);
+}, 1000);</code></pre>
+<div class="note">Zeit ist in <b>Millisekunden</b>: 1000 ms = 1 s. <code>setTimeout(f(), 1000)</code> ist falsch – Funktion ohne Klammern übergeben.</div>
+</article>
+
+<article class="e" data-k="try catch finally throw fehler exception error fehlerbehandlung">
+<h4>Fehlerbehandlung: <code>try / catch</code></h4>
+<p class="w"><b>Wann:</b> Code, der fehlschlagen kann (JSON.parse, fetch, Benutzereingaben), ohne dass das ganze Script abbricht.</p>
+<pre><code class="js">try {
+  const daten = JSON.parse(text);        // wirft bei ungültigem JSON einen Fehler
+  console.log(daten);
+} catch (err) {
+  console.error("Fehler:", err.message);
+} finally {
+  console.log("läuft immer");            // optional
+}
+
+function teile(a, b) {
+  if (b === 0) throw new Error("Division durch 0");   // eigenen Fehler auslösen
+  return a / b;
+}</code></pre>
+</article>
+
+<article class="e" data-k="localstorage sessionstorage speichern browser speicher persistent setitem getitem removeitem daten behalten">
+<h4><code>localStorage</code> &amp; <code>sessionStorage</code></h4>
+<p class="w"><b>Wann:</b> Kleine Daten im Browser behalten (Einstellungen, To-Do-Liste). <code>localStorage</code> bleibt dauerhaft, <code>sessionStorage</code> nur bis der Tab geschlossen wird.</p>
+<pre><code class="js">localStorage.setItem("name", "Arun");
+localStorage.getItem("name");        // "Arun"   (nicht vorhanden → null)
+localStorage.removeItem("name");
+localStorage.clear();                // alles löschen
+
+// Speichert NUR Strings → Objekte/Arrays mit JSON umwandeln
+const todos = [{ text: "Lernen", done: false }];
+localStorage.setItem("todos", JSON.stringify(todos));
+const geladen = JSON.parse(localStorage.getItem("todos")) || [];   // || [] falls noch nichts da</code></pre>
+</article>
+
+<article class="e" data-k="fetch api promise async await then catch json http request laden daten server ajax">
+<h4><code>fetch</code>, Promises, <code>async/await</code></h4>
+<p class="w"><b>Wann:</b> Daten von einem Server/einer API laden. Das dauert → das Ergebnis kommt <b>später</b> (asynchron). Ein <b>Promise</b> ist ein «Versprechen auf ein späteres Ergebnis».</p>
+<pre><code class="js">// Modern: async/await
+async function ladeDaten() {
+  try {
+    const antwort = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+    if (!antwort.ok) throw new Error("HTTP " + antwort.status);   // 404 etc. wirft fetch NICHT selber
+    const daten = await antwort.json();                            // Body als Objekt
+    console.log(daten.title);
+  } catch (err) {
+    console.error("Fehler:", err);
+  }
+}
+ladeDaten();
+
+// Gleiches mit .then()
+fetch(url)
+  .then(r =&gt; r.json())
+  .then(daten =&gt; console.log(daten))
+  .catch(err =&gt; console.error(err));
+
+// POST mit JSON
+await fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Arun" })
+});
+
+// Eigenes Promise
+const warte = ms =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms));
+await warte(1000);
+await Promise.all([fetch(a), fetch(b)]);   // parallel warten</code></pre>
+<div class="warn"><code>await</code> geht nur in <code>async</code>-Funktionen (oder top-level in Modulen). Über <code>file://</code> blockiert der Browser oft <code>fetch</code> auf lokale Dateien → lokalen Server starten (VS Code «Live Server» oder <code>python -m http.server</code>).</div>
+</article>
+
+<article class="e" data-k="regex regulärer ausdruck test match replace muster email validierung pattern">
+<h4>Reguläre Ausdrücke (Regex) – Basics</h4>
+<pre><code class="js">/\d+/.test("abc123");          // true   (\d = Ziffer, + = 1 oder mehr)
+"a1b22".match(/\d+/g);        // ["1","22"]  (g = global, alle Treffer)
+"Hallo".replace(/l/g, "L");   // "HaLLo"
+/^[A-Za-z]+$/.test(name);     // nur Buchstaben (^ Anfang, $ Ende)
+/^\S+@\S+\.\S+$/.test(mail);  // sehr einfache E-Mail-Prüfung
+/hallo/i.test("HALLO");       // i = Gross/Klein egal</code></pre>
+<table>
+<tr><th>Zeichen</th><th>Bedeutung</th></tr>
+<tr><td><code>\d \w \s</code></td><td>Ziffer / Wortzeichen / Leerraum</td></tr>
+<tr><td><code>. * + ?</code></td><td>beliebig / 0+ / 1+ / 0 oder 1</td></tr>
+<tr><td><code>[abc] [a-z] [^a]</code></td><td>Zeichenklasse / Bereich / nicht</td></tr>
+<tr><td><code>{2,4}</code></td><td>2 bis 4 Mal</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="module import export es module type module dateien aufteilen">
+<h4>Module: <code>import</code> / <code>export</code></h4>
+<pre><code class="html">&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</code></pre>
+<pre><code class="js">// util.js
+export const PI = 3.14;
+export function quadrat(x) { return x * x; }
+export default function hallo() { }
+
+// main.js
+import hallo, { PI, quadrat } from "./util.js";</code></pre>
+<div class="note">Module funktionieren nur über einen Webserver (<code>http://…</code>), nicht über <code>file://</code>.</div>
+</article>
+
+<article class="e" data-k="prompt sonderfälle null abbrechen cancel nan validierung eingabe prüfen">
+<h4>Eingabe prüfen (Zahl gültig?)</h4>
+<pre><code class="js">const eingabe = prompt("Zahl?");
+if (eingabe === null) {
+  // Benutzer hat «Abbrechen» gedrückt
+} else if (eingabe.trim() === "" || isNaN(Number(eingabe))) {
+  alert("Bitte eine gültige Zahl eingeben.");
+} else {
+  const zahl = Number(eingabe);
+}
+
+// aus sum-num
+let userNumber = Number(userInput);
+if (!isNaN(userNumber)) { numbers.push(userNumber); }
+else { alert("Please enter a valid number."); }</code></pre>
+</article>
+
+</div>
+</section>
+
+<section id="debug" data-title="Debugging &amp; Fallen">
+<h2>Debugging, Fehlermeldungen &amp; Fallen</h2>
+<p class="intro">Wenn es nicht funktioniert: <kbd>F12</kbd> → Tab «Konsole».</p>
+<div class="grid">
+
+<article class="e" data-k="debugging debugger console log devtools haltepunkt breakpoint step fehler suchen f12">
+<h4>Debugging-Werkzeuge</h4>
+<pre><code class="js">console.log("Wert:", x);            // Wert ausgeben
+console.log(typeof x, x);           // Typ prüfen
+console.table(array);               // Tabelle
+console.dir(element);               // Objekt-Eigenschaften
+console.time("t"); /* … */ console.timeEnd("t");   // Zeit messen
+
+debugger;                           // hält an dieser Stelle an, wenn DevTools offen sind (aus example1.html)</code></pre>
+<ul>
+<li><b>Konsole</b>: Fehlermeldungen + Zeilennummer (klickbar).</li>
+<li><b>Sources/Debugger</b>: Haltepunkt (Breakpoint) per Klick auf Zeilennummer; F10 = nächste Zeile, F11 = hinein, F8 = weiter. Variablen rechts einsehbar.</li>
+<li><b>Elements</b>: DOM live anschauen und ändern; <b>Network</b>: Requests; <b>Application</b>: localStorage.</li>
+<li>Strategie: Problem eingrenzen → mit <code>console.log</code> prüfen, ob Code <em>überhaupt</em> läuft und welche Werte ankommen.</li>
+</ul>
+</article>
+
+<article class="e wide" data-k="fehlermeldungen errors syntaxerror referenceerror typeerror not defined cannot read undefined null is not a function unexpected token">
+<h4>Häufige Fehlermeldungen &amp; Ursachen</h4>
+<table>
+<tr><th>Meldung</th><th>Ursache / Lösung</th></tr>
+<tr><td><code>Uncaught ReferenceError: x is not defined</code></td><td>Variable/Funktion existiert nicht (Tippfehler, falscher Scope, Reihenfolge, <code>let</code> zu spät deklariert).</td></tr>
+<tr><td><code>TypeError: Cannot read properties of null (reading 'addEventListener')</code></td><td>Element nicht gefunden: falscher Selektor (<code>#</code>/<code>.</code>?) oder Script läuft zu früh → <code>DOMContentLoaded</code>/<code>defer</code>.</td></tr>
+<tr><td><code>TypeError: Cannot read properties of undefined (reading 'x')</code></td><td>Du greifst auf etwas in <code>undefined</code> zu (Index ausserhalb, fehlendes Feld) – <code>?.</code> oder vorher prüfen.</td></tr>
+<tr><td><code>TypeError: x is not a function</code></td><td>Klammern auf Nicht-Funktion; falsche Methode; <code>NodeList.map</code> gibt's nicht → <code>Array.from</code>.</td></tr>
+<tr><td><code>SyntaxError: Unexpected token …</code></td><td>Fehlende/überzählige Klammer, Komma, Anführungszeichen.</td></tr>
+<tr><td><code>SyntaxError: Invalid or unexpected token</code></td><td>Offener String, falsche Anführungszeichen.</td></tr>
+<tr><td><code>TypeError: Assignment to constant variable</code></td><td><code>const</code> neu zugewiesen → <code>let</code> nehmen.</td></tr>
+<tr><td><code>SyntaxError: Identifier 'x' has already been declared</code></td><td>Doppelt mit <code>let/const</code> deklariert (auch über mehrere Script-Dateien!).</td></tr>
+<tr><td><code>Uncaught RangeError: Maximum call stack size exceeded</code></td><td>Funktion ruft sich endlos selbst auf (Rekursion ohne Abbruch).</td></tr>
+<tr><td>Seite hängt / reagiert nicht</td><td>Endlosschleife (<code>while</code> ohne Änderung der Bedingung).</td></tr>
+<tr><td>Nichts passiert, kein Fehler</td><td>Handler nicht registriert? Falsches Element? <code>console.log</code> ganz an den Anfang der Funktion setzen.</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="fallen pitfalls typische fehler anfänger gotchas falle string zahl plus nan gleich floating point 0.1">
+<h4>Typische Fallen</h4>
+<pre><code class="js">// 1) Text statt Zahl
+prompt("Zahl?") + 1;            // "51" – erst Number(...)
+"10" &gt; "9";                     // false (Textvergleich!) → Number() nutzen
+
+// 2) Kommazahlen
+0.1 + 0.2;                      // 0.30000000000000004
+(0.1 + 0.2).toFixed(2);         // "0.30"  (String!)
+Math.round((0.1 + 0.2) * 100) / 100;   // 0.3
+
+// 3) == vs ===
+0 == "";  0 == "0";  "" == "0";   // true, true, false – verwirrend → immer ===
+
+// 4) NaN
+NaN === NaN;                    // false → Number.isNaN(x)
+
+// 5) Objekt/Array-Gleichheit
+[1] === [1];                    // false (Referenzen)
+
+// 6) Leeres Prompt
+Number("");                     // 0 – nicht NaN!  → zuerst auf "" prüfen
+
+// 7) forEach + async: forEach wartet NICHT auf await → for…of nehmen
+
+// 8) Array-Index beginnt bei 0; letztes = length - 1
+// 9) Monat bei Date beginnt bei 0
+// 10) return in forEach beendet nur den Callback, nicht die äussere Funktion
+
+// 11) Division durch 0
+5 / 0;                          // Infinity (kein Fehler)</code></pre>
+</article>
+
+<article class="e" data-k="best practices sauber code stil namen konventionen lesbarkeit tipps prüfung">
+<h4>Guter Stil (gibt Punkte)</h4>
+<ul>
+<li><b>Sinnvolle Namen</b>: <code>userGuess</code> statt <code>x</code>; Funktionen als Verben (<code>addAlbum</code>), Boolean als Frage (<code>isDisplayed</code>).</li>
+<li><b>camelCase</b> für Variablen/Funktionen, <code>GROSS_SNAKE</code> für Konstanten, <code>PascalCase</code> für Klassen.</li>
+<li><code>const</code> zuerst, <code>let</code> wenn nötig; <b>immer</b> mit Deklaration (<code>let</code>/<code>const</code>) – keine impliziten Globals.</li>
+<li><code>===</code> statt <code>==</code>; immer <code>{ }</code> bei <code>if</code>.</li>
+<li>Einrückung konsistent; Wiederholungen in Funktionen/Schleifen auslagern (DRY: don't repeat yourself).</li>
+<li>Kommentare erklären das <em>Warum</em>, nicht das Offensichtliche.</li>
+<li>Selektoren, die mehrfach gebraucht werden, einmal in <code>const</code> speichern.</li>
+</ul>
+</article>
+
+</div>
+</section>
+
+<section id="htmlcss" data-title="HTML &amp; CSS (Kurz)">
+<h2>HTML &amp; CSS – Kurzreferenz</h2>
+<p class="intro">Damit die Selektoren und Layout-Aufgaben nicht zum Problem werden.</p>
+<div class="grid">
+
+<article class="e" data-k="html tags elemente struktur semantik header nav main section footer liste tabelle formular bild link">
+<h4>Wichtige HTML-Tags</h4>
+<pre><code class="html">&lt;h1&gt;…&lt;/h1&gt; … &lt;h6&gt;         &lt;!-- Überschriften --&gt;
+&lt;p&gt;Absatz &lt;em&gt;betont&lt;/em&gt; &lt;strong&gt;fett&lt;/strong&gt;&lt;/p&gt;
+&lt;a href="seite.html"&gt;Link&lt;/a&gt;   &lt;img src="bild.png" alt="Beschreibung" width="200"&gt;
+&lt;ul&gt;&lt;li&gt;Punkt&lt;/li&gt;&lt;/ul&gt;      &lt;!-- ungeordnet; &lt;ol&gt; = nummeriert --&gt;
+&lt;div&gt;Block&lt;/div&gt;  &lt;span&gt;inline&lt;/span&gt;
+&lt;button id="b"&gt;Klick&lt;/button&gt;
+&lt;input type="text" id="name" placeholder="Name"&gt;   &lt;!-- number, checkbox, radio, date … --&gt;
+&lt;textarea&gt;&lt;/textarea&gt;   &lt;select&gt;&lt;option value="1"&gt;Eins&lt;/option&gt;&lt;/select&gt;
+&lt;label for="name"&gt;Name&lt;/label&gt;
+&lt;table&gt;&lt;tr&gt;&lt;th&gt;Kopf&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Zelle&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;!-- Semantisch: header, nav, main, section, article, aside, footer --&gt;
+
+&lt;div id="eindeutig" class="mehrfach anderes" data-id="5"&gt;   &lt;!-- id = einmalig, class = beliebig oft --&gt;</code></pre>
+</article>
+
+<article class="e" data-k="css selektoren id klasse tag kind nachfahre pseudo hover first-child specificity">
+<h4>CSS-Selektoren (identisch für <code>querySelector</code>!)</h4>
+<pre><code class="css">p { }                 /* Tag */
+#titel { }            /* ID */
+.sale { }             /* Klasse */
+ul li { }             /* Nachfahre */
+ul &gt; li { }           /* direktes Kind */
+li.sale { }           /* li MIT Klasse sale */
+h1, h2 { }            /* mehrere */
+a:hover { }           /* Maus drüber */
+li:first-child { }  li:nth-child(2) { }
+input[type="text"] { }
+* { }                 /* alles */</code></pre>
+</article>
+
+<article class="e" data-k="css box model margin padding border farbe schrift größe einheiten px rem % vh">
+<h4>Box-Model, Farben, Einheiten</h4>
+<pre><code class="css">div {
+  margin: 10px;              /* Abstand AUSSEN */
+  padding: 8px;              /* Abstand INNEN */
+  border: 2px solid white;
+  border-radius: 20px;
+  width: 200px; height: 100px;
+  color: white;              /* Textfarbe */
+  background-color: rgb(28, 215, 97);   /* auch #1cd761, red, hsl() */
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+  text-align: center;
+  box-sizing: border-box;    /* width inkl. padding+border */
+}
+/* Einheiten: px fix, % relativ zum Eltern, rem relativ zur Grundschrift, vh/vw = % des Fensters */</code></pre>
+</article>
+
+<article class="e" data-k="flexbox flex grid layout display justify-content align-items gap position absolute relative anordnen spalten">
+<h4>Layout: Flexbox, Grid, Position</h4>
+<pre><code class="css">.zeile {                       /* Flexbox: Elemente in einer Reihe/Spalte */
+  display: flex;
+  flex-direction: row;         /* oder column */
+  justify-content: space-between;   /* Hauptachse: center, flex-start, space-around */
+  align-items: center;         /* Querachse */
+  gap: 20px;
+}
+
+#grid {                        /* Grid: Raster (Spoofify) */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);   /* 3 gleich breite Spalten */
+  gap: 10px;
+}
+
+.box   { position: relative; }             /* Bezugspunkt */
+.ball  { position: absolute; left: 10px; top: 20px; }   /* relativ zum nächsten positionierten Elternteil (dom3.1) */
+.fix   { position: fixed; top: 0; }        /* am Fenster festgeklebt */
+.weg   { display: none; }                  /* nicht anzeigen */</code></pre>
+</article>
+
+<article class="e" data-k="media query responsive mobile variablen css custom properties transition hover">
+<h4>Responsive, Variablen, Übergänge</h4>
+<pre><code class="css">:root { --farbe: #1cd761; }               /* CSS-Variable */
+.knopf { background: var(--farbe); transition: background .3s; }
+.knopf:hover { background: darkgreen; }
+
+@media (max-width: 600px) {               /* nur auf schmalen Bildschirmen */
+  #grid { grid-template-columns: 1fr; }
+}
+.versteckt { display: none; }             /* per JS: el.classList.toggle("versteckt") */</code></pre>
+</article>
+
+</div>
+</section>
+<section id="concepts" data-title="Konzepte &amp; Theorie">
+<h2>Konzepte &amp; Theorie (für Textfragen)</h2>
+<p class="intro">Begriffe, die in Prüfungen erklärt werden müssen – mit kurzen Musterformulierungen.</p>
+<div class="grid">
+
+<article class="e wide" data-k="modaler dialog modal dialog element showmodal close backdrop overlay popup nicht modal alert confirm barrierefreiheit fokus">
+<h4>Modaler Dialog (Modal) – Definition, Einsatz, Interaktion, Umsetzung</h4>
+<ul>
+<li><b>Definition:</b> Overlay/Fenster über der Seite, das den Rest der Seite <b>blockiert</b> (Hintergrund abgedunkelt, nicht klickbar), bis der Benutzer reagiert.</li>
+<li><b>Einsatz:</b> Bestätigung («Wirklich löschen?»), Login/Registrierung, Cookie-Hinweis, Formular ausfüllen, Bild gross anzeigen, Fehler-/Wichtige Meldungen.</li>
+<li><b>Interaktion:</b> Buttons («OK», «Abbrechen»), Schliessen-Kreuz «×», Escape-Taste, Klick auf den abgedunkelten Hintergrund.</li>
+<li><b>Nicht-modal:</b> blockiert nichts (Tooltip, Toast/Snackbar, Chat-Bubble, Dropdown).</li>
+<li><code>alert()</code>, <code>confirm()</code>, <code>prompt()</code> sind <b>eingebaute modale Dialoge</b> (blockieren das ganze Script).</li>
+<li><b>Barrierefreiheit:</b> Fokus in den Dialog setzen und dort halten, mit Esc schliessbar, Beschriftung/<code>aria-label</code>; <code>&lt;dialog&gt;</code> macht vieles automatisch.</li>
+</ul>
+<pre><code class="html">&lt;!-- A) Eingebaut: &lt;dialog&gt; --&gt;
+&lt;dialog id="dlg"&gt;
+  &lt;h3&gt;Titel&lt;/h3&gt;&lt;p&gt;Inhalt&lt;/p&gt;
+  &lt;form method="dialog"&gt;&lt;button&gt;Schliessen&lt;/button&gt;&lt;/form&gt;
+&lt;/dialog&gt;
+
+&lt;!-- B) Selbstgebaut: Overlay + Box --&gt;
+&lt;div id="overlay" class="overlay" hidden&gt;
+  &lt;div class="modal" role="dialog" aria-modal="true"&gt;
+    &lt;p&gt;Sicher?&lt;/p&gt;
+    &lt;button id="ja"&gt;Ja&lt;/button&gt; &lt;button id="nein"&gt;Nein&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<pre><code class="css">dialog::backdrop { background: rgba(0,0,0,.5); }     /* Abdunkelung beim &lt;dialog&gt; */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5);
+           display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal   { background: white; padding: 20px; border-radius: 12px; }</code></pre>
+<pre><code class="js">dlg.showModal();      // öffnen (modal)      dlg.close();   // schliessen      dlg.show();   // nicht-modal
+
+// Variante B
+const overlay = document.querySelector("#overlay");
+document.querySelector("#open").onclick = () =&gt; { overlay.hidden = false; };
+document.querySelector("#nein").onclick = () =&gt; { overlay.hidden = true; };
+overlay.addEventListener("click", e =&gt; { if (e.target === overlay) overlay.hidden = true; });  // Klick auf Hintergrund
+document.addEventListener("keydown", e =&gt; { if (e.key === "Escape") overlay.hidden = true; });</code></pre>
+</article>
+
+<article class="e wide" data-k="ui komponenten tooltip dropdown accordion tabs karussell carousel breadcrumb pagination spinner toast snackbar progress bar toggle switch autocomplete card navbar hamburger">
+<h4>UI-Komponenten (Begriffe)</h4>
+<table>
+<tr><th>Komponente</th><th>Beschreibung</th></tr>
+<tr><td>Modal / Dialog</td><td>blockierendes Overlay, verlangt Reaktion</td></tr>
+<tr><td>Tooltip</td><td>kleine Hilfe-Blase beim Darüberfahren/Fokus, blockiert nicht</td></tr>
+<tr><td>Toast / Snackbar</td><td>kurze Meldung, die von selbst wieder verschwindet</td></tr>
+<tr><td>Dropdown / Select</td><td>Auswahlliste, die sich aufklappt</td></tr>
+<tr><td>Accordion</td><td>Bereiche, die per Klick auf- und zugeklappt werden (nativ in HTML: <code>&lt;details&gt;&lt;summary&gt;Titel&lt;/summary&gt;Inhalt&lt;/details&gt;</code>)</td></tr>
+<tr><td>Tabs</td><td>Reiter, um zwischen Inhalten umzuschalten</td></tr>
+<tr><td>Carousel / Slider</td><td>Bilder/Inhalte durchblättern</td></tr>
+<tr><td>Navbar / Hamburger-Menü</td><td>Hauptnavigation / eingeklapptes Menü auf Mobile</td></tr>
+<tr><td>Breadcrumb</td><td>«Brotkrumen»-Pfad: Start &gt; Kategorie &gt; Seite</td></tr>
+<tr><td>Pagination</td><td>Seiten-Blätterung (1 2 3 … »)</td></tr>
+<tr><td>Spinner / Loader / Progress</td><td>Ladeanzeige während Daten geladen werden</td></tr>
+<tr><td>Card</td><td>Kachel mit Bild, Titel, Text, Button</td></tr>
+<tr><td>Toggle / Switch</td><td>Ein/Aus-Schalter (Checkbox)</td></tr>
+<tr><td>Autocomplete</td><td>Vorschläge beim Tippen</td></tr>
+</table>
+</article>
+
+<article class="e wide" data-k="textfragen musterantworten beschreiben erklären definition dom event callback ajax fetch json promise validierung debugging storage delegation spa api framework antwort formulieren prüfung text">
+<h4>Textfragen: Musterantworten zum Anpassen (je 2–3 Sätze)</h4>
+<ul>
+<li><b>DOM:</b> Das Document Object Model ist die Darstellung der HTML-Seite als Baum aus Objekten (Elemente, Attribute, Text). Der Browser baut ihn beim Laden auf; JavaScript kann darüber Elemente suchen, ändern, hinzufügen und löschen, ohne die Seite neu zu laden.</li>
+<li><b>Event / Event-Handler:</b> Ein Event ist ein Ereignis, z.B. Klick, Tastendruck oder «Seite geladen». Mit <code>addEventListener</code> registriert man eine Funktion (Handler), die aufgerufen wird, sobald das Ereignis eintritt; das Event-Objekt liefert Details (<code>target</code>, <code>key</code>).</li>
+<li><b>Callback:</b> Eine Funktion, die einer anderen Funktion als Argument übergeben und später aufgerufen wird, z.B. beim Event, beim Timer oder für jedes Array-Element (<code>forEach</code>).</li>
+<li><b>Event-Delegation:</b> Statt an viele Kindelemente einzeln einen Listener zu hängen, wird einer am Elternelement registriert. Durch Bubbling kommt der Klick dort an; über <code>event.target</code> erkennt man das Kind. Vorteil: weniger Code, funktioniert auch für später hinzugefügte Elemente.</li>
+<li><b>AJAX / fetch:</b> Daten werden im Hintergrund vom Server geladen, ohne die Seite neu zu laden. <code>fetch</code> liefert ein Promise; die Antwort wird mit <code>response.json()</code> in ein Objekt umgewandelt und danach im DOM angezeigt.</li>
+<li><b>JSON:</b> Leichtgewichtiges Textformat für Daten (Schlüssel-Wert-Paare, Arrays), unabhängig von der Programmiersprache; verbreitet für den Datenaustausch zwischen Client und Server. <code>JSON.stringify</code> erzeugt den Text, <code>JSON.parse</code> das Objekt.</li>
+<li><b>Promise / asynchron:</b> Ein Promise steht für ein Ergebnis, das erst später vorliegt (z.B. Serverantwort). Der Code blockiert nicht; mit <code>then</code> bzw. <code>await</code> wird weitergemacht, sobald das Ergebnis da ist.</li>
+<li><b>Validierung (Client/Server):</b> Eingaben werden geprüft (Pflichtfeld, Format, Länge). Clientseitig (im Browser, z.B. <code>required</code>, <code>pattern</code>, JS) gibt sie schnelles Feedback; sicher ist nur die serverseitige Prüfung, weil der Client manipulierbar ist.</li>
+<li><b>Debugging:</b> Fehler suchen und beheben. Mit den Browser-Entwicklertools: Konsole (Fehlermeldung mit Zeile), <code>console.log</code>, Haltepunkte im Debugger und schrittweises Ausführen, um Variablenwerte zu prüfen.</li>
+<li><b>Web Storage:</b> <code>localStorage</code> speichert Schlüssel-Wert-Paare (nur Strings) dauerhaft im Browser, <code>sessionStorage</code> bis der Tab geschlossen wird; die Daten werden nicht an den Server gesendet (im Gegensatz zu Cookies).</li>
+<li><b>Single Page Application:</b> Eine Webanwendung, die nur eine HTML-Seite lädt und Inhalte per JavaScript austauscht (Daten per fetch); fühlt sich wie eine App an, kein Neuladen bei Navigation.</li>
+<li><b>Framework / Library:</b> Fertiger, wiederverwendbarer Code. Bei einer Library ruft man Funktionen auf; ein Framework gibt die Struktur vor und ruft den eigenen Code auf. Vorteil: schneller entwickeln, bewährte Lösungen.</li>
+<li><b>Verstecken vs. Entfernen:</b> Verstecken (<code>display:none</code>, <code>hidden</code>) macht das Element nur unsichtbar – es bleibt im DOM, Inhalt/Zustand bleiben erhalten. Entfernen (<code>remove()</code>) nimmt es aus dem DOM; die Information ist weg.</li>
+</ul>
+</article>
+
+<article class="e" data-k="http request response methoden get post put delete statuscode 200 404 500 rest api json xml ajax client server">
+<h4>HTTP, REST, AJAX</h4>
+<ul>
+<li><b>Client</b> (Browser) sendet einen <b>Request</b>, der <b>Server</b> antwortet mit einer <b>Response</b> (Statuscode + Daten).</li>
+<li><b>Methoden:</b> <code>GET</code> lesen · <code>POST</code> neu anlegen/senden · <code>PUT/PATCH</code> ändern · <code>DELETE</code> löschen.</li>
+<li><b>Statuscodes:</b> 200 OK · 201 Created · 301/302 Weiterleitung · 400 Bad Request · 401 nicht angemeldet · 403 verboten · 404 nicht gefunden · 500 Serverfehler.</li>
+<li><b>REST-API:</b> Ressourcen über URLs (<code>/users/5</code>) + HTTP-Methoden, Daten meist als <b>JSON</b> (leichter als XML).</li>
+<li><b>AJAX:</b> Daten im Hintergrund nachladen, ohne die Seite neu zu laden (heute mit <code>fetch</code>).</li>
+</ul>
+</article>
+
+<article class="e" data-k="cookies localstorage sessionstorage unterschied speicher browser grösse ablauf server mitgesendet">
+<h4>Cookies vs. localStorage vs. sessionStorage</h4>
+<table>
+<tr><th></th><th>Cookie</th><th>localStorage</th><th>sessionStorage</th></tr>
+<tr><td>Lebensdauer</td><td>bis Ablaufdatum</td><td>dauerhaft</td><td>bis Tab schliesst</td></tr>
+<tr><td>Grösse</td><td>~4 KB</td><td>~5 MB</td><td>~5 MB</td></tr>
+<tr><td>Zum Server gesendet?</td><td><b>ja</b>, bei jedem Request</td><td>nein</td><td>nein</td></tr>
+<tr><td>Typischer Zweck</td><td>Login/Session, Tracking</td><td>Einstellungen, Daten</td><td>temporäre Daten</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="sicherheit xss cors same origin policy eingabe validierung clientseitig serverseitig sql injection vertrauen">
+<h4>Sicherheit im Frontend</h4>
+<ul>
+<li><b>XSS</b> (Cross-Site-Scripting): fremder JS-Code gelangt über Eingaben in die Seite. Schutz: <code>textContent</code> statt <code>innerHTML</code>, Eingaben nie ungeprüft einfügen.</li>
+<li><b>Same-Origin-Policy:</b> JS darf standardmässig nur Ressourcen desselben Ursprungs (Protokoll + Domain + Port) lesen; <b>CORS</b> erlaubt Ausnahmen (Server sendet Header).</li>
+<li><b>Validierung im Client</b> ist Komfort (schnelles Feedback), <b>keine Sicherheit</b> – der Server muss immer nochmals prüfen.</li>
+<li>Keine Passwörter/API-Schlüssel im JS-Code oder in <code>localStorage</code>.</li>
+</ul>
+</article>
+
+<article class="e" data-k="responsive design mobile first media query viewport barrierefreiheit accessibility a11y alt label aria semantik">
+<h4>Responsive Design &amp; Barrierefreiheit</h4>
+<ul>
+<li><b>Responsive:</b> Seite passt sich der Bildschirmgrösse an: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>, Media Queries, Flexbox/Grid, relative Einheiten (%, rem).</li>
+<li><b>Mobile-first:</b> zuerst für kleine Bildschirme gestalten, dann mit <code>@media (min-width: …)</code> erweitern.</li>
+<li><b>Barrierefreiheit (a11y):</b> <code>alt</code>-Text bei Bildern, <code>&lt;label for&gt;</code> bei Feldern, semantische Tags (<code>header nav main footer</code>), genügend Kontrast, Bedienung per Tastatur, ARIA-Attribute wo nötig.</li>
+</ul>
+</article>
+
+<article class="e" data-k="spa mpa framework library react vue angular npm bundler trennung html css js separation of concerns progressive enhancement">
+<h4>Architektur &amp; Werkzeuge</h4>
+<ul>
+<li><b>Separation of Concerns:</b> Struktur (HTML), Design (CSS), Verhalten (JS) in <b>getrennten Dateien</b> – darum kein Inline-JS/-CSS.</li>
+<li><b>Library</b> (z.B. jQuery: du rufst sie auf) vs. <b>Framework</b> (z.B. Angular, Vue: es gibt die Struktur vor; React ist streng genommen eine Library).</li>
+<li><b>SPA</b> (Single Page Application): eine HTML-Seite, Inhalte werden per JS ausgetauscht (schnell, app-artig). <b>MPA</b>: jede Ansicht = eigene Seite vom Server.</li>
+<li><b>npm</b>: Paketmanager für JS-Bibliotheken; <b>Bundler</b>/Build-Tools (Vite, webpack) bündeln und verkleinern (Minify) den Code.</li>
+<li><b>Git</b>: Versionsverwaltung (commit, push, pull, branch).</li>
+</ul>
+</article>
+
+<article class="e wide" data-k="selbsttest fragen antworten quiz typische prüfungsfragen unterschied erklären let const var innertext textcontent target currenttarget bubbling delegation callback">
+<h4>Selbsttest: typische Fragen kurz beantwortet</h4>
+<table>
+<tr><th>Frage</th><th>Antwort</th></tr>
+<tr><td>Unterschied <code>let</code> / <code>const</code> / <code>var</code>?</td><td><code>const</code> nicht neu zuweisbar; <code>let</code> neu zuweisbar, Block-Scope; <code>var</code> Funktions-Scope + hoisting (veraltet).</td></tr>
+<tr><td><code>==</code> vs <code>===</code>?</td><td><code>==</code> wandelt Typen um; <code>===</code> vergleicht Wert <b>und</b> Typ (bevorzugen).</td></tr>
+<tr><td>Was gibt <code>prompt()</code> / <code>input.value</code> zurück?</td><td>Immer einen <b>String</b> (<code>prompt</code> bei Abbrechen <code>null</code>) → mit <code>Number()</code> umwandeln.</td></tr>
+<tr><td><code>innerText</code> vs <code>textContent</code> vs <code>innerHTML</code>?</td><td>Text (CSS-abhängig) · Text (alles, schneller) · HTML wird interpretiert (XSS-Risiko).</td></tr>
+<tr><td><code>querySelector</code> vs <code>querySelectorAll</code>?</td><td>erstes Element oder <code>null</code> · alle Treffer als NodeList (leer, wenn keine).</td></tr>
+<tr><td><code>event.target</code> vs <code>event.currentTarget</code>?</td><td>tatsächlich geklicktes Element · Element, an dem der Listener hängt.</td></tr>
+<tr><td>Was ist Event-Bubbling / Delegation?</td><td>Event steigt zu den Eltern auf · ein Listener am Elternelement für viele (auch neue) Kinder.</td></tr>
+<tr><td><code>onclick</code> vs <code>addEventListener</code>?</td><td><code>onclick</code> nur ein Handler (überschreibt); <code>addEventListener</code> mehrere, entfernbar, Optionen.</td></tr>
+<tr><td>Was macht <code>preventDefault()</code>?</td><td>Verhindert das Standardverhalten (Formular abschicken, Link folgen).</td></tr>
+<tr><td>Was ist ein Callback?</td><td>Funktion, die als Argument übergeben und später aufgerufen wird (Event-Handler, Timer, <code>forEach</code>).</td></tr>
+<tr><td>Was ist der DOM?</td><td>Baumartige Objektdarstellung der HTML-Seite im Browser, per JS les- und veränderbar.</td></tr>
+<tr><td>Was ist <code>NaN</code> / <code>undefined</code> / <code>null</code>?</td><td>keine gültige Zahl · Wert nicht gesetzt · bewusst leer.</td></tr>
+<tr><td>Was ist ein Array / Objekt?</td><td>geordnete Liste (Index ab 0) · Sammlung von Schlüssel-Wert-Paaren.</td></tr>
+<tr><td>Was ist JSON?</td><td>Textformat für Daten; <code>JSON.stringify</code> (Objekt → Text), <code>JSON.parse</code> (Text → Objekt).</td></tr>
+<tr><td>Was ist asynchron? Promise?</td><td>Läuft im Hintergrund, Ergebnis später; Promise = Versprechen auf späteres Ergebnis (<code>then</code> / <code>await</code>).</td></tr>
+<tr><td>Wie Fehler im Code finden?</td><td>Konsole (F12), <code>console.log</code>, <code>debugger</code>/Breakpoints, Fehlermeldung + Zeile lesen.</td></tr>
+<tr><td>Wozu <code>DOMContentLoaded</code> / <code>defer</code>?</td><td>Script erst ausführen, wenn das HTML im DOM ist (sonst finden Selektoren nichts → <code>null</code>).</td></tr>
+<tr><td>Client- vs Serverseitig?</td><td>Läuft im Browser (JS im Frontend) · läuft auf dem Server (Datenbank, Logik, z.B. Node.js).</td></tr>
+</table>
+</article>
+
+</div>
+</section>
+
+<section id="uebungen" data-title="Meine Übungen">
+<h2>Meine Übungen (was ich gemacht habe)</h2>
+<p class="intro">Alle Aufgaben aus dem Ordner <code>m294</code> – mit den verwendeten Konzepten und den Stolpersteinen im eigenen Code.</p>
+<div class="grid">
+
+<article class="e" data-k="übersicht ordner aufgaben hello-world hello-user guess-number sum-num dom2.1 dom2.3 dom3.1 spoofify bulgarien konzepte">
+<h4>Übersicht der Aufgaben</h4>
+<table>
+<tr><th>Ordner</th><th>Inhalt / Konzepte</th></tr>
+<tr><td><code>hello-world</code></td><td>Script einbinden (inline + extern), <code>alert</code>, <code>document.write</code>, Button-Klick, Variablen (<code>let/var/const</code>), Fibonacci mit <code>debugger</code></td></tr>
+<tr><td><code>hello-user</code></td><td><code>prompt</code>, <code>Date.getHours()</code>, <code>if/else if</code> – Begrüssung nach Tageszeit</td></tr>
+<tr><td><code>guess-number</code></td><td><code>Math.random</code>, <code>Math.floor</code>, <code>prompt</code>, Vergleiche</td></tr>
+<tr><td><code>sum-num</code></td><td><code>while</code>-Schleife, Array (<code>push</code>, <code>slice</code>, <code>forEach</code>), <code>Number</code>/<code>isNaN</code>, Operator-Auswahl</td></tr>
+<tr><td><code>dom2.1</code> (steam.html)</td><td>DOM-Selektoren: <code>querySelector(All)</code> auf ID, Klasse, Tag, verschachtelt</td></tr>
+<tr><td><code>dom2.3</code></td><td>DOM ändern: <code>style</code>, <code>innerText</code>, <code>classList.add</code>, <code>createElement</code>, <code>appendChild</code>, <code>removeChild</code></td></tr>
+<tr><td><code>dom3.1</code></td><td>Events: <code>onclick</code>, Zähler mit <code>parseInt</code>, <code>getBoundingClientRect</code>, Ball folgt Mausklick</td></tr>
+<tr><td><code>spoofify</code></td><td>Grosses Projekt: Array von Objekten, Bilder dynamisch hinzufügen/entfernen/mischen, Event-Delegation, Tracklist als <code>&lt;ol&gt;</code></td></tr>
+<tr><td><code>bulgarien</code></td><td>Gespeicherte Wikivoyage-Seite (HTML/CSS-Struktur, keine eigene JS-Übung)</td></tr>
+</table>
+</article>
+
+<article class="e" data-k="hello world übung alert document.write script.js vars.js button fibonacci debugger">
+<h4>hello-world</h4>
+<pre><code class="js">// script.js
+alert("Second Alert");
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.querySelector("button");
+  button.onclick = function () { alert("Good Boy"); };
+});
+
+// vars.js
+let name = "Test"; let age = 23;
+var test = "asdasd";
+const test2 = 2;</code></pre>
+<div class="note"><code>&lt;script&gt;</code> im <code>&lt;head&gt;</code> läuft vor dem Button → deshalb <code>DOMContentLoaded</code>. <code>document.write</code> im Head schreibt Text ins Dokument; nach dem Laden würde es alles überschreiben. <code>vars.js</code> zeigt die drei Arten der Deklaration: <code>let</code> (veränderbar), <code>var</code> (veraltet), <code>const</code> (konstant).</div>
+</article>
+
+<article class="e" data-k="hello-user tageszeit begrüssung date prompt if else">
+<h4>hello-user – Begrüssung nach Uhrzeit</h4>
+<pre><code class="js">const date = new Date();
+const time = date.getHours();
+let name = prompt("What is your name?");
+if (time &lt; 11 &amp;&amp; time &gt;= 5)       { alert("Good morning " + name); }
+else if (time &lt; 17 &amp;&amp; time &gt;= 11) { alert("Good afternoon " + name); }
+else if (time &lt; 21 &amp;&amp; time &gt;= 17) { alert("Good evening " + name); }
+else                                { alert("Good night " + name); }</code></pre>
+<div class="tip">Im Original stand <code>time = date.getHours();</code> ohne <code>const</code> → unbeabsichtigte globale Variable. Immer deklarieren.</div>
+</article>
+
+<article class="e" data-k="guess number zahlenraten übung random prompt vergleich">
+<h4>guess-number – Zahl raten</h4>
+<pre><code class="js">let randomNumber = Math.floor(Math.random() * 100) + 1;   // 1–100
+let userGuess = prompt("Guess a number between 1 and 100:");
+if (userGuess == randomNumber)      alert("Congratulations! " + randomNumber);
+else if (userGuess &lt; randomNumber)  alert("Too low!");
+else                                alert("Too high!");</code></pre>
+<div class="tip">Verbesserung: <code>const guess = Number(prompt(…))</code> (strikter Vergleich mit <code>===</code>) und eine <code>do…while</code>-Schleife, damit man mehrfach raten kann. <code>prompt</code> liefert <code>null</code>/String.</div>
+</article>
+
+<article class="e" data-k="sum num rechner summe operator while prompt array push slice foreach">
+<h4>sum-num – Zahlen eingeben &amp; rechnen</h4>
+<pre><code class="js">let userInput = prompt("Enter a number:");
+let numbers = [];
+while (userInput !== "") {                  // leere Eingabe beendet
+  let userNumber = Number(userInput);
+  if (!isNaN(userNumber)) { numbers.push(userNumber); }
+  else { alert("Please enter a valid number."); }
+  userInput = prompt("Enter a number:");
+}
+const op = prompt("Enter an operator (+, -, *, /):");
+let result = numbers[0];
+numbers.slice(1).forEach(function (num) {
+  if (op === "+") result += num;
+  else if (op === "-") result -= num;
+  else if (op === "*") result *= num;
+  else if (op === "/") result /= num;
+});
+alert("The result is: " + result);</code></pre>
+<div class="warn">Stolpersteine: bei «Abbrechen» ist <code>userInput === null</code> → <code>Number(null)</code> ist <code>0</code>, die Schleife läuft weiter; bei leerer Liste ist <code>numbers[0]</code> <code>undefined</code>. Sauberer: <code>while (userInput !== "" &amp;&amp; userInput !== null)</code>.</div>
+</article>
+
+<article class="e" data-k="dom2.1 steam selektoren game store querySelectorAll ul li klasse sale id">
+<h4>dom2.1 (steam.html) – Selektoren üben</h4>
+<pre><code class="js">document.querySelectorAll(".games")[0]                        // 1. Liste (New Releases)
+document.querySelectorAll(".games")[1].querySelectorAll("li")[1]  // Top Sellers → 2. Spiel (GTA V)
+document.querySelectorAll(".games")[2].querySelectorAll("li")[3]  // Free to Play → 4. Spiel (Warframe)
+document.querySelectorAll("h1")                                // alle h1
+document.querySelectorAll("#game-of-the-day")                  // per ID
+document.querySelectorAll(".sale")                             // alle mit Klasse sale (3 Stück)</code></pre>
+<div class="warn">Im Original: <code>document.querySelector(".games" [0])</code> = Fehler (Index gehört hinter die Klammer). Und das Script stand im <code>&lt;head&gt;</code> ohne <code>DOMContentLoaded</code> → würde <b>leere</b> Ergebnisse liefern. Zum Ausprobieren die Befehle in der <b>Konsole</b> eingeben.</div>
+</article>
+
+<article class="e" data-k="dom2.3 dom manipulation hintergrund text klasse element erstellen entfernen bild">
+<h4>dom2.3 – DOM verändern</h4>
+<pre><code class="js">document.addEventListener("DOMContentLoaded", function () {
+  document.body.style.backgroundColor = "lightblue";        // Style
+  document.querySelector("h1").innerText = "Arun";          // Text ändern
+  document.querySelector("p").classList.add("large");       // Klasse hinzufügen
+  const ul = document.querySelector("ul");
+  const newLi = document.createElement("li");               // neues Element
+  newLi.textContent = "Drittes Element";
+  ul.appendChild(newLi);                                    // anhängen
+  ul.removeChild(ul.children[1]);                           // 2. Kind entfernen
+  const img = document.createElement("img");                // Bild erzeugen
+  img.src = "…/loungemusic.jpeg"; img.alt = "Cover";
+  img.style.width = "200px"; img.style.height = "200px";
+  document.querySelector("h1").appendChild(img);
+});</code></pre>
+<div class="tip">Bildpfade <b>relativ</b> angeben (<code>albumcovers/x.jpg</code>), nicht als absoluten Windows-Pfad (<code>C:\…</code>) – der geht nur auf dem eigenen PC. <code>const</code> vor <code>img</code> nicht vergessen.</div>
+</article>
+
+<article class="e" data-k="dom3.1 zähler counter onclick parseint ball fussball klick position getboundingclientrect">
+<h4>dom3.1 – Zähler &amp; Ball folgt Klick</h4>
+<pre><code class="js">document.addEventListener("DOMContentLoaded", () =&gt; {
+  document.querySelector("#buttonOne").onclick = () =&gt; {
+    const value = document.querySelector("#countOne").innerText;   // Text
+    document.querySelector("#countOne").innerText = parseInt(value) + 1;   // Zahl +1
+  };
+
+  document.querySelector("div").onclick = (event) =&gt; {
+    const ball = document.querySelector("img");
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;       // Klick relativ zum div
+    const y = event.clientY - rect.top;
+    ball.style.position = "absolute";
+    ball.style.left = x - ball.width / 2 + "px";
+    ball.style.top  = y - ball.height / 2 + "px";
+  };
+});</code></pre>
+<div class="note">CSS nötig: <code>div { position: relative; }</code> und <code>img { position: absolute; }</code>. <code>event.currentTarget</code> = das <code>div</code>, an dem der Handler hängt.</div>
+</article>
+
+<article class="e wide" data-k="spoofify projekt albumcovers add remove randomize tracks klick liste event delegation zufällig math random appendchild">
+<h4>Spoofify – Ablauf &amp; Kernideen</h4>
+<p class="w"><b>Idee:</b> Die Daten stehen in einem Array <code>albumCovers</code> (Objekte mit <code>id, src, alt, isDisplayed, tracklist</code>). Die Seite zeigt daraus die Bilder; drei Buttons und Klicks verändern das DOM <em>und</em> das Array (Zustand <code>isDisplayed</code>).</p>
+<pre><code class="js">// 1) "Add three more": nächste 3 Alben als &lt;img&gt; anhängen
+const coverCount = grid.querySelectorAll("img").length;      // schon angezeigte
+let count = 0;
+for (let i = coverCount; i &lt; albumCovers.length; i++) {
+  const img = document.createElement("img");
+  img.setAttribute("src", albumCovers[i].src);
+  img.setAttribute("alt", albumCovers[i].alt);
+  img.setAttribute("width", 200);
+  img.setAttribute("height", 200);
+  img.setAttribute("data-id", albumCovers[i].id);            // id merken für spätere Klicks
+  grid.appendChild(img);
+  albumCovers[i].isDisplayed = true;
+  count += 1;
+  if (count &gt; 2) break;                                      // nur 3 pro Klick
+}
+
+// 2) "Remove first three": erstes Bild entfernen (3×)
+for (let i = 0; i &lt; 3; i++) {
+  const first = document.querySelectorAll("#latest-realeses-grid img")[0];
+  if (first) first.remove();
+}
+
+// 3) "Randomize": zufällige, noch nicht angezeigte Alben wählen
+let random = albumCovers[Math.floor(Math.random() * albumCovers.length)];
+while (random.isDisplayed === true) {                        // bis eines gefunden wird, das noch nicht sichtbar ist
+  random = albumCovers[Math.floor(Math.random() * albumCovers.length)];
+}
+
+// 4) Klick auf Cover → Tracks: Event-Delegation am Grid
+grid.addEventListener("click", (event) =&gt; {
+  const ol = document.querySelector("#tracks");
+  while (ol.firstChild) ol.removeChild(ol.firstChild);       // Liste leeren
+  if (event.target.tagName === "IMG") {
+    const id = parseInt(event.target.getAttribute("data-id"), 10);
+    const album = albumCovers.find(a =&gt; a.id === id);
+    album.tracklist.forEach(t =&gt; {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ol.appendChild(li);
+    });
+  }
+});
+
+// 5) Klick auf Track → Player-Titel ändern
+document.querySelector("#tracks").addEventListener("click", (event) =&gt; {
+  if (event.target.tagName === "LI") {
+    document.querySelector("#track-player").textContent = event.target.textContent;
+  }
+});</code></pre>
+<div class="tip">Verbesserungen zum Merken: <code>Math.random() * albumCovers.length</code> statt fest <code>41</code>; <code>albumCovers</code> mit <code>const</code> deklarieren; <code>while</code>-Suche endet nie, wenn <em>alle</em> Alben angezeigt sind (Abbruchbedingung nötig). Die <code>albumCovers</code>-Daten müssen <b>vor</b> dem Code stehen, der sie braucht.</div>
+</article>
+
+</div>
+</section>
+
+<section id="recipes" data-title="Prüfungs-Rezepte">
+<h2>Prüfungs-Rezepte (fertige Muster)</h2>
+<p class="intro">Typische Aufgaben, sofort anpassbar.</p>
+<div class="grid">
+
+<article class="e" data-k="rezept zähler counter button klick erhöhen erniedrigen reset">
+<h4>Zähler mit +, −, Reset</h4>
+<pre><code class="js">document.addEventListener("DOMContentLoaded", () =&gt; {
+  let zaehler = 0;                                     // Zustand in einer Variable
+  const anzeige = document.querySelector("#zahl");
+  const zeige = () =&gt; { anzeige.textContent = zaehler; };
+
+  document.querySelector("#plus").addEventListener("click",  () =&gt; { zaehler++; zeige(); });
+  document.querySelector("#minus").addEventListener("click", () =&gt; { zaehler--; zeige(); });
+  document.querySelector("#reset").addEventListener("click", () =&gt; { zaehler = 0; zeige(); });
+});</code></pre>
+</article>
+
+<article class="e" data-k="rezept todo liste hinzufügen löschen eingabe input li erzeugen entfernen delegation">
+<h4>To-do-Liste: hinzufügen &amp; löschen</h4>
+<pre><code class="js">document.addEventListener("DOMContentLoaded", () =&gt; {
+  const input = document.querySelector("#neu");
+  const liste = document.querySelector("#liste");
+
+  document.querySelector("#add").addEventListener("click", () =&gt; {
+    const text = input.value.trim();
+    if (text === "") return;                       // leere Eingabe ignorieren
+    const li = document.createElement("li");
+    li.textContent = text;
+    liste.appendChild(li);
+    input.value = "";                              // Feld leeren
+    input.focus();
+  });
+
+  liste.addEventListener("click", (e) =&gt; {         // Delegation: Klick auf li = durchstreichen
+    if (e.target.tagName === "LI") e.target.classList.toggle("erledigt");
+  });
+  liste.addEventListener("dblclick", (e) =&gt; {      // Doppelklick = löschen
+    if (e.target.tagName === "LI") e.target.remove();
+  });
+});</code></pre>
+</article>
+
+<article class="e" data-k="rezept ratespiel zahl raten schleife versuche while do">
+<h4>Zahlenraten mit Schleife &amp; Versuchszähler</h4>
+<pre><code class="js">const geheim = Math.floor(Math.random() * 100) + 1;
+let versuche = 0;
+let tipp;
+do {
+  const eingabe = prompt("Rate 1–100");
+  if (eingabe === null) break;                     // Abbrechen
+  tipp = Number(eingabe);
+  versuche++;
+  if (isNaN(tipp))       alert("Keine Zahl!");
+  else if (tipp &lt; geheim) alert("Zu tief");
+  else if (tipp &gt; geheim) alert("Zu hoch");
+} while (tipp !== geheim);
+if (tipp === geheim) alert(`Richtig nach ${versuche} Versuchen!`);</code></pre>
+</article>
+
+<article class="e" data-k="rezept summe durchschnitt max min array zahlen berechnen statistik">
+<h4>Summe, Durchschnitt, Max, Min</h4>
+<pre><code class="js">const zahlen = [4, 8, 15, 16, 23, 42];
+const summe    = zahlen.reduce((s, n) =&gt; s + n, 0);
+const schnitt  = summe / zahlen.length;
+const groesste = Math.max(...zahlen);
+const kleinste = Math.min(...zahlen);
+const gerade   = zahlen.filter(n =&gt; n % 2 === 0);
+const verdoppelt = zahlen.map(n =&gt; n * 2);
+
+// Ohne reduce (Schleife)
+let s = 0;
+for (const n of zahlen) { s += n; }</code></pre>
+</article>
+
+<article class="e" data-k="rezept live suche filter liste input tippen verstecken li">
+<h4>Live-Suche / Filter in einer Liste</h4>
+<pre><code class="js">const suche = document.querySelector("#suche");
+suche.addEventListener("input", () =&gt; {
+  const begriff = suche.value.toLowerCase();
+  document.querySelectorAll("#liste li").forEach(li =&gt; {
+    const passt = li.textContent.toLowerCase().includes(begriff);
+    li.style.display = passt ? "" : "none";        // "" = Standardanzeige
+  });
+});</code></pre>
+</article>
+
+<article class="e" data-k="rezept tabelle aus array objekten erzeugen rendern liste html generieren">
+<h4>Liste/Tabelle aus Array von Objekten erzeugen</h4>
+<pre><code class="js">const personen = [
+  { name: "Anna", alter: 25 },
+  { name: "Ben",  alter: 31 },
+];
+const tbody = document.querySelector("#tabelle tbody");
+tbody.innerHTML = "";                              // erst leeren
+personen.forEach(p =&gt; {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `&lt;td&gt;${p.name}&lt;/td&gt;&lt;td&gt;${p.alter}&lt;/td&gt;`;   // nur mit eigenen Daten!
+  tbody.appendChild(tr);
+});
+// sicherer ohne innerHTML: pro Zelle createElement("td") + textContent</code></pre>
+</article>
+
+<article class="e" data-k="rezept toggle dark mode klasse umschalten menü ein ausklappen verstecken anzeigen accordion">
+<h4>Umschalten: Dark-Mode / Menü / Text ein- &amp; ausblenden</h4>
+<pre><code class="js">document.querySelector("#theme").addEventListener("click", () =&gt; {
+  document.body.classList.toggle("dark");          // CSS: body.dark { background:#111; color:#eee }
+});
+
+document.querySelector("#mehr").addEventListener("click", () =&gt; {
+  const box = document.querySelector("#details");
+  box.hidden = !box.hidden;                        // hidden-Attribut umkehren
+});</code></pre>
+</article>
+
+<article class="e" data-k="rezept formular validierung submit fehlermeldung email passwort pflichtfeld">
+<h4>Formular validieren</h4>
+<pre><code class="js">document.querySelector("#f").addEventListener("submit", (e) =&gt; {
+  e.preventDefault();
+  const name = document.querySelector("#name").value.trim();
+  const alter = Number(document.querySelector("#alter").value);
+  const fehler = document.querySelector("#fehler");
+  const meldungen = [];
+
+  if (name.length &lt; 2)             meldungen.push("Name zu kurz");
+  if (isNaN(alter) || alter &lt; 18)  meldungen.push("Mindestens 18");
+
+  fehler.textContent = meldungen.join(", ");        // "" wenn alles ok
+  if (meldungen.length === 0) { /* absenden / weiterverarbeiten */ }
+});</code></pre>
+</article>
+
+<article class="e" data-k="rezept bild wechseln galerie slider vor zurück index array modulo karussell">
+<h4>Bildergalerie (vor/zurück)</h4>
+<pre><code class="js">const bilder = ["a.jpg", "b.jpg", "c.jpg"];
+let index = 0;
+const img = document.querySelector("#bild");
+const zeige = () =&gt; { img.src = bilder[index]; };
+
+document.querySelector("#next").onclick = () =&gt; {
+  index = (index + 1) % bilder.length;             // nach dem letzten → wieder 0
+  zeige();
+};
+document.querySelector("#prev").onclick = () =&gt; {
+  index = (index - 1 + bilder.length) % bilder.length;
+  zeige();
+};</code></pre>
+</article>
+
+<article class="e" data-k="rezept uhr digitaluhr setinterval zeit anzeige sekunde countdown">
+<h4>Digitaluhr</h4>
+<pre><code class="js">const uhr = document.querySelector("#uhr");
+function aktualisiere() {
+  const d = new Date();
+  const zweistellig = n =&gt; String(n).padStart(2, "0");
+  uhr.textContent = `${zweistellig(d.getHours())}:${zweistellig(d.getMinutes())}:${zweistellig(d.getSeconds())}`;
+}
+aktualisiere();                 // sofort anzeigen
+setInterval(aktualisiere, 1000);</code></pre>
+</article>
+
+<article class="e" data-k="rezept localstorage speichern laden todo persistent notiz">
+<h4>Daten dauerhaft speichern &amp; laden</h4>
+<pre><code class="js">let todos = JSON.parse(localStorage.getItem("todos")) || [];   // beim Start laden
+
+function speichern() { localStorage.setItem("todos", JSON.stringify(todos)); }
+function hinzufuegen(text) {
+  todos.push({ text, done: false });
+  speichern();
+  rendern();
+}
+function rendern() {
+  const ul = document.querySelector("#liste");
+  ul.innerHTML = "";
+  todos.forEach(t =&gt; {
+    const li = document.createElement("li");
+    li.textContent = t.text;
+    ul.appendChild(li);
+  });
+}
+rendern();</code></pre>
+</article>
+
+<article class="e" data-k="rezept api daten laden fetch anzeigen liste json">
+<h4>Daten von einer API laden &amp; anzeigen</h4>
+<pre><code class="js">async function laden() {
+  const ul = document.querySelector("#liste");
+  ul.textContent = "Lade …";
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const users = await res.json();                   // Array von Objekten
+    ul.innerHTML = "";
+    users.forEach(u =&gt; {
+      const li = document.createElement("li");
+      li.textContent = `${u.name} (${u.email})`;
+      ul.appendChild(li);
+    });
+  } catch (err) {
+    ul.textContent = "Fehler: " + err.message;
+  }
+}
+document.querySelector("#laden").addEventListener("click", laden);</code></pre>
+</article>
+
+<article class="e" data-k="rezept zufällig element array mischen shuffle fisher yates würfel">
+<h4>Zufälliges Element &amp; Array mischen</h4>
+<pre><code class="js">const zufaellig = arr =&gt; arr[Math.floor(Math.random() * arr.length)];
+
+// Mischen (Fisher–Yates)
+function mischen(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i &gt; 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+// Kurz &amp; unsauber: arr.sort(() =&gt; Math.random() - 0.5)</code></pre>
+</article>
+
+</div>
+</section>
+
+<section id="glossar" data-title="Glossar">
+<h2>Glossar</h2>
+<div class="grid">
+<article class="e wide" data-k="glossar begriffe definition erklärung dom api callback event handler scope hoisting closure iife dry">
+<h4>Fachbegriffe kurz erklärt</h4>
+<table>
+<tr><th>Begriff</th><th>Bedeutung</th></tr>
+<tr><td>DOM</td><td>Document Object Model – Baumstruktur der Seite, die JS lesen/ändern kann</td></tr>
+<tr><td>Engine</td><td>Programm im Browser, das JS ausführt (V8 in Chrome/Edge, SpiderMonkey in Firefox, JavaScriptCore in Safari)</td></tr>
+<tr><td>Variable</td><td>Benannter Speicherplatz für einen Wert</td></tr>
+<tr><td>Funktion</td><td>Benannter, wiederverwendbarer Code-Block; kann Parameter nehmen und einen Wert zurückgeben</td></tr>
+<tr><td>Parameter / Argument</td><td>Platzhalter in der Definition / tatsächlicher Wert beim Aufruf</td></tr>
+<tr><td>Callback</td><td>Funktion, die einer anderen Funktion übergeben und später aufgerufen wird</td></tr>
+<tr><td>Event / Handler / Listener</td><td>Ereignis (Klick) / Funktion, die darauf reagiert / Registrierung (<code>addEventListener</code>)</td></tr>
+<tr><td>Bubbling</td><td>Ein Event steigt vom Ziel-Element nach oben durch alle Eltern</td></tr>
+<tr><td>Delegation</td><td>Ein Listener am Elternelement bearbeitet Events der Kinder</td></tr>
+<tr><td>Scope</td><td>Bereich, in dem eine Variable sichtbar ist (global, Funktion, Block)</td></tr>
+<tr><td>Hoisting</td><td>Deklarationen werden virtuell an den Anfang ihres Scopes «gehoben» (Funktionen komplett, <code>var</code> ohne Wert)</td></tr>
+<tr><td>Closure</td><td>Funktion, die auf Variablen ihrer Umgebung zugreifen kann, auch nachdem diese beendet ist</td></tr>
+<tr><td>Synchron / asynchron</td><td>Nacheinander blockierend / im Hintergrund, Ergebnis später (Promise, Callback)</td></tr>
+<tr><td>Primitiv / Referenz</td><td>Einfacher Wert (kopiert) / Objekt (Verweis)</td></tr>
+<tr><td>Truthy / Falsy</td><td>Wert, der in einer Bedingung als true / false gilt</td></tr>
+<tr><td>Iteration</td><td>Ein Durchlauf einer Schleife</td></tr>
+<tr><td>Mutation</td><td>Direktes Ändern eines Objekts/Arrays (z.B. <code>push</code>)</td></tr>
+<tr><td>API</td><td>Schnittstelle, über die man Funktionen oder Daten nutzen kann (DOM-API, Web-API, fetch)</td></tr>
+<tr><td>JSON</td><td>Textformat für Daten (aus JS-Objekt-Syntax)</td></tr>
+<tr><td>XSS</td><td>Cross-Site-Scripting: fremder Code wird über ungeprüfte Eingaben in die Seite eingeschleust (Gefahr bei <code>innerHTML</code>)</td></tr>
+<tr><td>DRY</td><td>Don't Repeat Yourself – Wiederholungen vermeiden</td></tr>
+</table>
+</article>
+</div>
+</section>
+
+<p class="none" id="none">Keine Treffer. Tipp: kürzere oder andere Begriffe probieren (z.B. «klick», «array», «schleife», «datum»).</p>
+
+</main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignorieren */ } }
+  };
+
+  /* ---------- Suchtext je Eintrag (vor dem Einfügen der Copy-Buttons) ---------- */
+  const entries = $$(".e");
+  entries.forEach(e => {
+    e._hay = (e.textContent + " " + (e.dataset.k || "")).toLowerCase();
+  });
+
+  /* ---------- Theme ---------- */
+  const root = document.documentElement;
+  const saved = store.get("m294-theme");
+  if (saved === "dark" || saved === "light") root.dataset.theme = saved;
+  $("#themeBtn").addEventListener("click", () => {
+    const dark = root.dataset.theme === "dark" ||
+      (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.dataset.theme = dark ? "light" : "dark";
+    store.set("m294-theme", root.dataset.theme);
+  });
+
+  /* ---------- Syntax-Farben (klein & offline) ---------- */
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const span = (cls, s) => `<span class="${cls}">${esc(s)}</span>`;
+  const KW = "const let var function return if else for while do switch case break continue default new class extends " +
+    "static this typeof instanceof in of try catch finally throw async await import export from true false null undefined delete void yield";
+  const jsRe = new RegExp(
+    "(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)" +                                          // 1 Kommentar
+    "|(\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])*'|`(?:\\\\.|[^`\\\\])*`)" +     // 2 String
+    "|\\b(" + KW.split(" ").join("|") + ")\\b" +                                        // 3 Schlüsselwort
+    "|\\b(\\d+(?:\\.\\d+)?n?)\\b" +                                                      // 4 Zahl
+    "|\\b([A-Za-z_$][\\w$]*)(?=\\()", "g");                                             // 5 Funktionsaufruf
+  function hlJs(t) {
+    let out = "", last = 0, m;
+    jsRe.lastIndex = 0;
+    while ((m = jsRe.exec(t))) {
+      out += esc(t.slice(last, m.index));
+      out += span(m[1] ? "tc" : m[2] ? "ts" : m[3] ? "tk" : m[4] ? "tn" : "tf", m[0]);
+      last = jsRe.lastIndex;
+    }
+    return out + esc(t.slice(last));
+  }
+  const htmlRe = /(<!--[\s\S]*?-->)|(<\/?)([a-zA-Z][\w-]*)([^>]*)(>)/g;
+  function hlHtml(t) {
+    let out = "", last = 0, m;
+    htmlRe.lastIndex = 0;
+    while ((m = htmlRe.exec(t))) {
+      out += esc(t.slice(last, m.index));
+      if (m[1]) out += span("tc", m[1]);
+      else {
+        const attrs = esc(m[4]).replace(/([\w-]+)=("[^"]*"|'[^']*')/g,
+          (_, n, v) => `<span class="tn">${n}</span>=<span class="ts">${v}</span>`);
+        out += esc(m[2]) + span("tt", m[3]) + attrs + esc(m[5]);
+      }
+      last = htmlRe.lastIndex;
+    }
+    return out + esc(t.slice(last));
+  }
+  function hlCss(t) {
+    return t.split(/(\/\*[\s\S]*?\*\/)/).map((p, i) => i % 2 ? span("tc", p) :
+      esc(p).replace(/([\w-]+)(\s*:)(?=[^{}]*;)/g, '<span class="tn">$1</span>$2')).join("");
+  }
+  $$("pre code").forEach(c => {
+    const t = c.textContent;
+    c.innerHTML = c.classList.contains("html") ? hlHtml(t) : c.classList.contains("css") ? hlCss(t) : hlJs(t);
+    const b = document.createElement("button");
+    b.className = "btn copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(t); b.textContent = "✓"; }
+      catch (e) {
+        const r = document.createRange(); r.selectNodeContents(c);
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        b.textContent = "Markiert";
+      }
+      setTimeout(() => { b.textContent = "Copy"; }, 1200);
+    });
+    c.parentElement.appendChild(b);
+  });
+
+  /* ---------- Inhaltsverzeichnis ---------- */
+  const sections = $$("main section");
+  const toc = $("#toc");
+  sections.forEach(sec => {
+    const a = document.createElement("a");
+    a.href = "#" + sec.id;
+    a.dataset.for = sec.id;
+    a.innerHTML = `<span>${sec.dataset.title}</span><small>${$$(".e", sec).length}</small>`;
+    a.addEventListener("click", () => toc.classList.remove("open"));
+    toc.appendChild(a);
+  });
+  $("#menuBtn").addEventListener("click", () => toc.classList.toggle("open"));
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(list => {
+      list.forEach(en => {
+        if (en.isIntersecting) {
+          $$("#toc a").forEach(a => a.classList.toggle("active", a.dataset.for === en.target.id));
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    sections.forEach(s => io.observe(s));
+  }
+
+  /* ---------- Suche ---------- */
+  const q = $("#q"), count = $("#count"), none = $("#none");
+
+  function clearMarks() {
+    $$("mark").forEach(m => {
+      const p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+  }
+  function highlight(el, source) {
+    const test = new RegExp(source, "i");
+    const re = new RegExp(source, "gi");
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (n.parentElement.closest("button") || !test.test(n.nodeValue))
+        ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(n => {
+      const text = n.nodeValue;
+      const frag = document.createDocumentFragment();
+      let last = 0, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        if (m[0].length === 0) { re.lastIndex++; continue; }
+        if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        const mk = document.createElement("mark");
+        mk.textContent = m[0];
+        frag.appendChild(mk);
+        last = m.index + m[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(last)));
+      n.parentNode.replaceChild(frag, n);
+    });
+  }
+
+  function run() {
+    const tokens = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    clearMarks();
+    let shown = 0;
+    entries.forEach(e => {
+      const ok = tokens.every(t => e._hay.includes(t));
+      e.classList.toggle("hidden", !ok);
+      if (ok) shown++;
+    });
+    sections.forEach(s => {
+      const n = $$(".e:not(.hidden)", s).length;
+      s.classList.toggle("hidden", n === 0);
+      const a = $(`#toc a[data-for="${s.id}"]`);
+      if (a) { a.classList.toggle("empty", n === 0); $("small", a).textContent = n; }
+    });
+    $(".hero").classList.toggle("hidden", tokens.length > 0);
+    none.classList.toggle("show", tokens.length > 0 && shown === 0);
+    count.textContent = tokens.length ? `${shown} Treffer` : "";
+    const marks = tokens.filter(t => t.length > 1).map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    if (marks.length) {
+      const source = marks.join("|");
+      $$(".e:not(.hidden)").forEach(e => highlight(e, source));
+    }
+  }
+  let timer;
+  q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(run, 120); });
+
+  document.addEventListener("keydown", e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if (e.key === "/" && !typing) { e.preventDefault(); q.focus(); q.select(); }
+    else if (e.key === "Escape" && document.activeElement === q) { q.value = ""; run(); q.blur(); }
+  });
+  run();
+})();
+</script>
+</body>
+</html>

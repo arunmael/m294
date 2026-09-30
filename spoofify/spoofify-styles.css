@@ -27,7 +27,7 @@ main {
 a {
     border: 2px solid white;
     padding: 8px;
-    border-radius: 20px;
+    border-radius: 25px;
     color: white;
     text-decoration: none;
 }
@@ -54,8 +54,8 @@ footer {
     margin-left: 50px;
     margin-right: 50px;
     background-color: rgb(183, 250, 207);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
     padding: 8px;
     margin-bottom: 0;
 }
@@ -83,7 +83,7 @@ h2 {
 
 .button-row button {
     background-color: white;
-    border-radius: 5px; 
+    border-radius: 25px;
     border: 1px solid white;
     width: auto;
     display: inline-block; 
@@ -100,4 +100,44 @@ h2 {
 
 .players {
     background-color: rgb(183, 250, 207);
+
+}
+
+.track:hover {
+    background-color: rgb(183, 250, 207);
+    border-color: 2px solid rgb(72, 5, 48);
+    border-radius: 5px;
+}
+
+
+.track {
+    padding: 5px;
+}
+
+.track:active {
+    background-color: rgb(72, 5, 48);
+    color: white;
+}
+
+
+img:hover {
+    background-color: rgb(183, 250, 207);
+    border-color: 2px solid rgb(183, 250, 207);
+    border-radius: 25px;
+}
+
+img {
+    padding: 10px;
+}
+
+
+img:active{
+    background-color: rgb(72, 5, 48);
+    border-color: 2px solid rgb(72, 5, 48);
+    border-radius: 25px;
+    color: white;
+}
+
+img {
+    border-radius: 25px;
 }
