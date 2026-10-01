@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <title>Watchlist</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Watchlist</h1>
+    <div id="statuszeile">
+      <p></p>
+    </div>
+  </header>
+  <main>
+    <form id="login">
+      <input type="text" id="username" placeholder="Benutzername" name="user-name">
+      <input type="password" id="password" placeholder="Passwort" name="password">
+      <button id="loginBtn" type="submit">Login</button>
+    </form>
+
+    <section id="app" hidden>
+      <ul id="films"></ul>
+      <button id="addBtn" type="button">Add three more</button>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

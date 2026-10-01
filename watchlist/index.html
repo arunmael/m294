@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watchlist</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Watchlist</h1>
+    <button id="logout" hidden>Logout</button>
+  </header>
+
+  <p id="status" class="status"></p>
+
+  <section id="login">
+    <input id="username" placeholder="Benutzername" autocomplete="off">
+    <input id="password" type="password" placeholder="Passwort">
+    <button id="loginBtn">Login</button>
+    <p class="hint">Test-Zugang: admin / m294</p>
+  </section>
+
+  <main id="app" hidden>
+    <div class="toolbar">
+      <button id="addBtn">Add three more</button>
+      <button id="removeBtn">Remove first three</button>
+      <button id="shuffleBtn">Shuffle</button>
+      <input id="search" placeholder="Filter nach Titel…">
+    </div>
+
+    <div id="cards"></div>
+
+    <section id="details">
+      <h2>Details</h2>
+      <p class="placeholder">Klicke auf eine Karte.</p>
+    </section>
+
+    <section id="watchlist">
+      <h2>Merkliste</h2>
+      <ul id="list"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

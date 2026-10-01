@@ -1,0 +1,12 @@
+body { font-family: system-ui, sans-serif; max-width: 520px; margin: 24px auto; padding: 0 16px; }
+#statuszeile { background: #eef0f4; border-radius: 6px; padding: 0 12px; min-height: 2.4em; display: flex; align-items: center; }
+#statuszeile p { margin: 0; }
+#statuszeile.error { background: #fde2e4; color: #b3261e; }
+#statuszeile.ok { background: #dff3e4; color: #1b6b35; }
+form { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+input, button { font: inherit; padding: 8px 12px; }
+[hidden] { display: none; }
+#films { list-style: none; padding: 0; }
+#films li { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid #ccd; border-radius: 6px; margin-bottom: 8px; cursor: pointer; }
+#films li:hover { background: #f4f6ff; }
+#films img { width: 48px; height: 48px; object-fit: cover; }

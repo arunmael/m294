@@ -1,0 +1,33 @@
+{
+  "editor.quickSuggestions": { "other": false, "comments": false, "strings": false },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.tabCompletion": "off",
+  "editor.wordBasedSuggestions": "off",
+  "editor.snippetSuggestions": "none",
+  "editor.parameterHints.enabled": false,
+  "editor.inlineSuggest.enabled": false,
+  "editor.hover.enabled": false,
+
+  "editor.autoClosingBrackets": "never",
+  "editor.autoClosingQuotes": "never",
+  "editor.autoClosingOvertype": "never",
+  "editor.autoSurround": "never",
+  "html.autoClosingTags": false,
+  "html.autoCreateQuotes": false,
+  "javascript.autoClosingTags": false,
+
+  "emmet.showExpandedAbbreviation": "never",
+  "emmet.triggerExpansionOnTab": false,
+
+  "html.suggest.html5": false,
+  "javascript.suggest.enabled": false,
+  "javascript.suggestionActions.enabled": false,
+  "css.completion.triggerPropertyValueCompletion": false,
+  "json.suggest.enabled": false,
+
+  "github.copilot.enable": { "*": false },
+  "github.copilot.editor.enableAutoCompletions": false,
+  "editor.inlineSuggest.suppressSuggestions": true
+}

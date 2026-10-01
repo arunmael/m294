@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+    <title>Reminder</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Reminder</h1>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Alle Aufgaben</h2>
+            <div id="aufgaben-liste"></div>
+        </section>
+
+        <section id="aufgabe">
+            <h2 id="aufgabe-title"></h2>
+            <form id="form">
+                <label for="input-title">Gib einen Titel an</label>
+                <input type="text" id="input-title" name="title" required>
+                <label for="completed-button">Ist es bereits abgeschlossen</label>
+                <input type="checkbox" id="completed-button" name="completed">
+                <button type="submit" id="submit">Speichern</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
