@@ -22,7 +22,7 @@ window.addEventListener("DOMContentLoaded", function () {
                         console.log(data);
                         const p = document.querySelector("p");
                         let today = data.forecast[0];
-                        p.textContent = `Postleitzahl: ${plz}, Temperatur-max: ${today.temperatureMax}°C, Temperatur-min: ${today.temperatureMin}°C, Wetter: ${today.precipitationMax}`;
+                        p.textContent = `Das Wetter in ${plz}, ist bis zu ${today.temperatureMax}°C und nicht unter ${today.temperatureMin}°C, Wetter: ${today.precipitationMax}`;
                     } else {
                         console.error("Error fetching weather data:", response.statusText);
                     }
