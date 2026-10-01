@@ -8,7 +8,7 @@
   "editor.snippetSuggestions": "none",
   "editor.parameterHints.enabled": false,
   "editor.inlineSuggest.enabled": false,
-  "editor.hover.enabled": false,
+  "editor.hover.enabled": "off",
 
   "editor.autoClosingBrackets": "never",
   "editor.autoClosingQuotes": "never",

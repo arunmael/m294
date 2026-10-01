@@ -11,21 +11,26 @@
 <body>
     <header>
         <h1>Reminder</h1>
+        <button id="new" class="nav">+</button>
+        <button id="back" class="nav">
+            < </button>
     </header>
     <main>
-        <section id="home">
-            <h2>Alle Aufgaben</h2>
+        <section id="aufgaben">
+            <h2>Aufgaben:</h2>
+            <!--<button id="reload">Reload</button>-->
             <div id="aufgaben-liste"></div>
         </section>
 
-        <section id="aufgabe">
+        <section id="aufgabe-erstellen">
             <h2 id="aufgabe-title"></h2>
             <form id="form">
-                <label for="input-title">Gib einen Titel an</label>
-                <input type="text" id="input-title" name="title" required>
-                <label for="completed-button">Ist es bereits abgeschlossen</label>
+                <label for="input-title">Titel</label>
+                <input type="text" id="input-title" name="title">
+                <label for="completed-button">Abgeschlossen:</label>
                 <input type="checkbox" id="completed-button" name="completed">
                 <button type="submit" id="submit">Speichern</button>
+                <button type="submit" id="submit-update">Update</button>
             </form>
         </section>
     </main>

@@ -1,3 +1,76 @@
-#Waufgabe * {
-    display: none
+.nav {
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    padding: 0;
+    border: 3px solid white;
+}
+
+body * {
+    font-family: Helvetica;
+    border-radius: 25px;
+    padding: 5px;
+    margin: 10px;
+}
+
+body {
+    background-color: #ebdbf1;
+}
+
+
+button {
+    background-color: #D8ADC2;
+    font-size: 15px;
+    border: none;
+    height: 25px;
+    width: 80px;
+    font-size: 14px;
+}
+
+
+button:active {
+    background-color: #9E2E40
+}
+
+
+button:hover {
+    background-color: #db7eab
+}
+
+
+input {
+    background-color: white;
+}
+
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+}
+
+
+
+#aufgaben-liste {
+    background-color: #bbcfb5;
+}
+
+
+#aufgaben-liste div {
+    background-color: #94ac8e;
+}
+
+
+
+.aufgaben-erstellen * {
+    display: block;
+}
+
+#input-title,
+#completed-button {
+    display: block;
+}
+
+
+label {
+    font-size: 20px;
 }
