@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     form = document.querySelector("form")
     firstDiv = document.querySelectorAll("div")[0]
+    const plzInput = document.querySelector("#plz");
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -42,4 +43,32 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     });
+
+
+    plzInput.addEventListener("blur", function () {
+        const plzValue = plzInput.value;
+        const ortInput = document.querySelector("#ort");
+        async function fetchLocation() {
+            url = `https://api.zippopotam.us/CH/${plzValue}`;
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    const location = data.places[0]["place name"];
+                    ortInput.value = location;
+
+
+                } else {
+                    console.error("Error fetching location:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching location:", error);
+            }
+        }
+
+        fetchLocation();
+    });
+
+
 });
