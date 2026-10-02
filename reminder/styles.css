@@ -4,7 +4,8 @@
     width: 50px;
     border-radius: 50%;
     padding: 0;
-    border: 3px solid white;
+    border: 2px solid #94ac8e;
+    ;
 }
 
 body * {
@@ -15,7 +16,7 @@ body * {
 }
 
 body {
-    background-color: #ebdbf1;
+    background-color: #bbcfb5;
 }
 
 
@@ -51,12 +52,12 @@ input[type="checkbox"] {
 
 
 #aufgaben-liste {
-    background-color: #bbcfb5;
+    background-color: #94ac8e;
 }
 
 
 #aufgaben-liste div {
-    background-color: #94ac8e;
+    background-color: #bbcfb5;
 }
 
 
@@ -73,4 +74,9 @@ input[type="checkbox"] {
 
 label {
     font-size: 20px;
+}
+
+
+#login * {
+    display: block
 }

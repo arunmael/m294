@@ -2,27 +2,86 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
     const titleField = document.querySelector("#input-title");
     const completedField = document.querySelector("#completed-button");
-    const url = "http://localhost/tasks";
+    const url = "http://localhost/auth/jwt/tasks";
     const reminderDiv = document.querySelector("#aufgaben-liste");
     const reload = document.querySelector("#reload");
     const newReminder = document.querySelector("#new");
-    const goHome = document.querySelector("#back");
+    const backHome = document.querySelector("#back");
     const updateReminder = document.querySelector(".update-button");
+    const loginForm = document.querySelector("#login-form");
+    const passwordElement = document.querySelector("#password");
+    const usernameElement = document.querySelector("#username");
+    let token = null;
+
     let editId = null;
     document.querySelector("#submit-update").style.display = "none";
+    loginButton = document.querySelector("#login-button");
 
-    document.querySelectorAll("#aufgabe-erstellen *").forEach((element) => {
-        element.style.display = "none";
-    });
+    function loginScreen() {
+        document.querySelectorAll('#aufgaben *, #aufgabe-erstellen *').forEach((element) => {
+            element.style.display = "none";
+        });
+        document.querySelectorAll(".nav").forEach((element) => {
+            element.style.display = "none";
+        });
+    };
+
+
+    function hideLoginScreen() {
+        document.querySelectorAll("#login *").forEach((element) => {
+            element.style.display = "none";
+        });
+    };
+
+
+
+    function goHome() {
+        document.querySelectorAll("#aufgabe-erstellen *").forEach((element) => {
+            element.style.display = "none";
+        });
+        document.querySelectorAll("#aufgaben *").forEach((element) => {
+            element.style.display = "";
+        });
+        document.querySelector("#back").style.display = "none";
+        document.querySelector("#new").style.display = "";
+        editId = null;
+        form.reset();
+        document.querySelector("#submit-update").style.display = "none";
+    };
+
+
+    loginScreen();
     document.querySelector("#back").style.display = "none";
 
+    newReminder.onclick = () => {
+        document.querySelectorAll("#aufgabe-erstellen *").forEach((element) => {
+            element.style.display = "";
+        });
+        document.querySelectorAll("#aufgaben *").forEach((element) => {
+            element.style.display = "none";
+        });
+        document.querySelector("#back").style.display = "";
+        document.querySelector("#new").style.display = "none";
+        editId = null;
+        form.reset();
+        document.querySelector("#submit-update").style.display = "none";
+    };
 
 
+    backHome.onclick = () => {
+        goHome();
+    };
 
 
     async function getReminders() {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": "Bearer " + token
+                }
+            },
+            );
             if (response.ok) {
                 reminderDiv.replaceChildren()
                 const data = await response.json();
@@ -57,7 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                     deleteReminder.onclick = async () => {
-                        await fetch(`http://localhost/task/${i.id}`, { method: "DELETE" });
+                        await fetch(`http://localhost/tasks${i.id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "authorization": "Bearer " + token
+                            }
+                        },
+                        );
                         newDiv.remove();
                     };
 
@@ -94,10 +160,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Weil ich reload button geloescht habe fals der wieder genutz wird code wieder aktivieren.
-    getReminders();
     //reload.onclick = () => {
     // getReminders()
     //}
+
+
+
+
+    async function login() {
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            usernameInput = usernameElement.value;
+            passwordInput = passwordElement.value;
+            const postData = {
+                email: usernameInput,
+                password: passwordInput,
+            };
+
+            async function getToken() {
+
+                try {
+                    const response = await fetch("http://localhost/auth/jwt/sign", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(postData)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        token = data.token;
+                        console.log("Token received:", token);
+
+                    } else {
+                        console.error("Error fetching token:", response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error fetching token:", error);
+                }
+            }
+
+            getToken().then(() => {
+                if (token !== null) {
+                    goHome();
+                    hideLoginScreen();
+                    getReminders();
+                } else {
+                    alert("Email oder Passwort sind falsch")
+                };
+            });
+        });
+
+    };
+
+    login();
+
+
+
+
+
 
 
 
@@ -133,10 +256,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "authorization": "Bearer " + token
                     },
-                    body: JSON.stringify(newReminder)
-                });
+                    body: JSON.stringify(newReminder),
+                },
+                );
 
                 if (response.ok) {
                     const data = await response.json();
@@ -212,16 +337,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch(url, {
                     method: "PUT",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "authorization": "Bearer " + token
                     },
-                    // FEHLER (auskommentiert): "newReminder" ist an dieser Stelle der "+"-Button aus Zeile 8
-                    // (ein HTML-Element). JSON.stringify macht daraus ein leeres {}, der Server bekaeme
-                    // weder id noch Titel. Das Objekt mit den Daten gibt es hier nur im Speichern-Handler.
-                    // body: JSON.stringify(newReminder)
-
-                    // ANPASSUNG: Es wird das Objekt "updatedData" von oben geschickt (id, Titel, Status).
-                    body: JSON.stringify(updatedData)
-                });
+                    body: JSON.stringify(updatedData),
+                },
+                );
 
                 if (response.ok) {
                     const data = await response.json();
@@ -246,35 +367,4 @@ document.addEventListener("DOMContentLoaded", () => {
         updateReminder();
 
     });
-
-
-    newReminder.onclick = () => {
-        document.querySelectorAll("#aufgabe-erstellen *").forEach((element) => {
-            element.style.display = "";
-        });
-        document.querySelectorAll("#aufgaben *").forEach((element) => {
-            element.style.display = "none";
-        });
-        document.querySelector("#back").style.display = "";
-        document.querySelector("#new").style.display = "none";
-        editId = null;
-        form.reset();
-        document.querySelector("#submit-update").style.display = "none";
-    };
-
-
-    goHome.onclick = () => {
-        document.querySelectorAll("#aufgabe-erstellen *").forEach((element) => {
-            element.style.display = "none";
-        });
-        document.querySelectorAll("#aufgaben *").forEach((element) => {
-            element.style.display = "";
-        });
-        document.querySelector("#back").style.display = "none";
-        document.querySelector("#new").style.display = "";
-        editId = null;
-        form.reset();
-        document.querySelector("#submit-update").style.display = "none";
-    };
-
 });
